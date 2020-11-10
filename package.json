@@ -1,5 +1,9 @@
 {
-	"name": "pdfReader",
+	"name": "cqcentral",
+	"main": "app.js",
+	"engines": {
+		"node": "12.x"
+	},
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
