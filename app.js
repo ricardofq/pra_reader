@@ -46,7 +46,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use('/api', indexRouter);
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files
 	app.use(express.static(path.join(__dirname, 'pra_readerr/build'))); // Handle React routing, return all requests to React app
@@ -54,8 +54,6 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.join(__dirname, 'pra_readerr/build', 'index.html'));
 	});
 }
-
-app.use('/api', indexRouter);
 
 app.listen(PORT, () => {
 	console.log(`Server is listening on PORT ${PORT}`);
