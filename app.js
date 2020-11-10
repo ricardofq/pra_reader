@@ -40,20 +40,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
 	session({
 		secret            : process.env.PASSPORT_SECRET,
-		resave            : false,
-		saveUninitialized : true
+		resave            : true,
+		saveUninitialized : true,
+		cookie            : {
+			sameSite : 'strict'
+		},
+		store             : new MemoryStore(),
+		maxAge            : Date.now() + 30 * 86400 * 1000
 	})
 );
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api', indexRouter);
-if (process.env.NODE_ENV === 'production') {
-	// Serve any static files
-	app.use(express.static(path.join(__dirname, 'pra_readerr/build'))); // Handle React routing, return all requests to React app
-	app.get('*', function(req, res){
-		res.sendFile(path.join(__dirname, 'pra_readerr/build', 'index.html'));
-	});
-}
+// if (process.env.NODE_ENV === 'production') {
+// 	// Serve any static files
+// 	app.use(express.static(path.join(__dirname, 'pra_readerr/build'))); // Handle React routing, return all requests to React app
+// 	app.get('*', function(req, res){
+// 		res.sendFile(path.join(__dirname, 'pra_readerr/build', 'index.html'));
+// 	});
+// }
+
+app.use(express.static(path.join(__dirname, 'pra_readerr/build'))); // Handle React routing, return all requests to React app
+app.get('*', function(req, res){
+	res.sendFile(path.join(__dirname, 'pra_readerr/build', 'index.html'));
+});
 
 app.listen(PORT, () => {
 	console.log(`Server is listening on PORT ${PORT}`);
