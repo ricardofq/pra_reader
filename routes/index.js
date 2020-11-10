@@ -122,6 +122,7 @@ router.post('/register', async (req, res) => {
 		const userID = parseInt(allUsers.reduce((a, c) => (a.userID > c.userID ? a.userID : c.userID), {})) + 1;
 		const { isAdmin, isCandidate } = req.body;
 		const userBody = { ...req.body, isAdmin: isAdmin, isCandidate: isCandidate };
+		if (isAdmin) delete userBody.group;
 		// const userToBeCreated = await userTypeHandler(userBody);
 		const newUser = new Users({ ...userBody, userID: userID.toString() });
 		const hashedPassword = await bcrypt.hash(userBody.password, 10);

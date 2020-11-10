@@ -14,11 +14,12 @@ const passport = require('passport');
 const PORT = process.env.PORT || 5000;
 
 const indexRouter = require('./routes/index');
+const Users = require('./models/Users');
 
 const app = express();
 
 mongoose
-	.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/cqcentral', {
+	.connect(process.env.DBURL || 'mongodb://localhost:27017/cqcentral', {
 		useNewUrlParser    : true,
 		useCreateIndex     : true,
 		useUnifiedTopology : true
