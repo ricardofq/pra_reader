@@ -1,3 +1,3 @@
 [submodule "pra_readerr"]
 	path = pra_readerr
-	url = https://github.com/ricardofq/cqcentral_client.git
+	url = git@github.com:ricardofq/cqcentral_client.git
