@@ -3,8 +3,9 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
+		"start": "npx nodemon",
 		"client": "cd pra_readerr && yarn start",
-		"server": "nodemon app.js",
+		"server": "node app.js",
 		"dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
 	},
 	"dependencies": {
