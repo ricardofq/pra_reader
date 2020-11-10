@@ -60,9 +60,9 @@ app.use('/api', indexRouter);
 // 	});
 // }
 
-app.use(express.static(path.join(__dirname, '/pra_readerr/build'))); // Handle React routing, return all requests to React app
+app.use(express.static(path.join(__dirname, './pra_readerr/build'))); // Handle React routing, return all requests to React app
 app.get('*', function(req, res){
-	res.sendFile(path.join(__dirname, '/pra_readerr/build', 'index.html'));
+	res.sendFile(path.join(__dirname, './pra_readerr/build', 'index.html'));
 });
 
 app.listen(PORT, () => {
