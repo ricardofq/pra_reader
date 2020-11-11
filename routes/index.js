@@ -267,6 +267,8 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 					console.log(error);
 					res.send({ error: error });
 				});
+		} else {
+			res.send({ file: req.file });
 		}
 	} catch (error) {
 		console.log(error);
