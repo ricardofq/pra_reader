@@ -253,7 +253,7 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 								const pagF = pdfArr.find((el) => {
 									return el.text.includes(last);
 								});
-								dataArray.push({ textID: txtEl._id, pagI: pagI.page, pagF: pagF.page });
+								// dataArray.push({ textID: txtEl._id, pagI: pagI.page, pagF: pagF.page });
 								if (pagF && pagI) {
 									await Text.findOneAndUpdate(
 										{ _id: txtEl._id },

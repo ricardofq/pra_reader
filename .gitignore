@@ -59,3 +59,9 @@ typings/
 
 # next.js build output
 .next
+
+#Client
+
+/pra_readerr/node_modules
+/pra_readerr/src
+/pra_readerr/public
