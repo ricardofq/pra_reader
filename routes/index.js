@@ -18,7 +18,6 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const fs = require('fs');
 const pdf = require('pdf-parse');
-const pdfreader = require('pdfreader');
 // const ACCGrid = require('../models/ACCGrid');
 
 // SET STORAGE
@@ -226,9 +225,8 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 			const userGrid = await ACCGrid.findOne({ _id: gridID });
 			// const src = fs.readFileSync(req.file.buffer, { encoding: 'utf8' });
 			// console.log('src: ', src);
-			new pdfreader.PdfReader()
-				.parseBuffer(req.file.buffer, async function(err, data){
-					if (err) return console.log(err);
+			pdf(req.file.buffer)
+				.then(async function(data){
 					let dataArray = [];
 					let { text } = data;
 					text = text.replace(/(\r\n|\n|\r)/gm, ' ');
@@ -265,7 +263,10 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 					}
 					res.send({ msg: 'ufa', data: dataArray, pdfArr: pdfArr });
 				})
-				.catch((err) => console.log(err));
+				.catch((error) => {
+					console.log(error);
+					res.send({ error: error });
+				});
 		} else {
 			res.send({ file: req.file });
 		}
