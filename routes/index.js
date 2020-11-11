@@ -18,6 +18,7 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const fs = require('fs');
 const pdf = require('pdf-parse');
+const pdfreader = require('pdfreader');
 // const ACCGrid = require('../models/ACCGrid');
 
 // SET STORAGE
@@ -220,22 +221,23 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 	// console.log(req.body.data);
 	try {
 		if (req.file) {
-			console.log(req.file);
 			// console.log('req.body.data: ', req.body.dat, req.body.data[1]);
 			const gridID = req.body.data;
 			const userGrid = await ACCGrid.findOne({ _id: gridID });
 			// const src = fs.readFileSync(req.file.buffer, { encoding: 'utf8' });
 			// console.log('src: ', src);
-			pdf(req.file.buffer)
-				.then(async function(data){
-					console.log(data);
+			new pdfreader.PdfReader()
+				.parseBuffer(req.file.buffer, async function(err, data){
+					if (err) return console.log(err);
 					let dataArray = [];
-					const { text } = data;
+					let { text } = data;
+					text = text.replace(/(\r\n|\n|\r)/gm, ' ');
 					let pdfArr = [];
-					for (let i = 2; i < data.numpages; i++) {
-						let str = text.substring(text.indexOf(`- ${i} -`), text.indexOf(`- ${i + 1} -`));
+					for (let i = 3; i < data.numpages; i++) {
+						let str = text.substring(text.lastIndexOf(`- ${i} -`), text.lastIndexOf(`- ${i + 1} -`));
 						pdfArr.push({ page: i, text: str.replace(/(\r\n|\n|\r)/gm, '') });
 					}
+					console.log(pdfArr[34]);
 					for (let i = 0; i < userGrid.NG.length; i++) {
 						// let element = userGrid.NG[i];
 						let ngEl = await NG.findOne({ _id: userGrid.NG[i] });
@@ -244,14 +246,12 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 							// console.log(drEl);
 							for (let k = 0; k < drEl.texts.length; k++) {
 								let txtEl = await Text.findOne({ _id: drEl.texts[k] });
-								console.log(txtEl);
 								let { first, last } = txtEl.text;
-								console.log(first, last);
 								const pagI = pdfArr.find((el) => {
-									return el.text.includes(first);
+									return el.text.toLowerCase().includes(first.toLowerCase());
 								});
 								const pagF = pdfArr.find((el) => {
-									return el.text.includes(last);
+									return el.text.toLowerCase().includes(last.toLowerCase());
 								});
 								// dataArray.push({ textID: txtEl._id, pagI: pagI.page, pagF: pagF.page });
 								if (pagF && pagI) {
@@ -265,10 +265,7 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 					}
 					res.send({ msg: 'ufa', data: dataArray, pdfArr: pdfArr });
 				})
-				.catch((error) => {
-					console.log(error);
-					res.send({ error: error });
-				});
+				.catch((err) => console.log(err));
 		} else {
 			res.send({ file: req.file });
 		}
