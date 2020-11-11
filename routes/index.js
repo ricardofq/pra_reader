@@ -15,19 +15,20 @@ const Text = require('../models/Text');
 const Groups = require('../models/Groups');
 // const { multerUpload, dataUri, parser } = require('../middleware/multer');
 const multer = require('multer');
+const storage = multer.memoryStorage();
 const fs = require('fs');
 const pdf = require('pdf-parse');
 // const ACCGrid = require('../models/ACCGrid');
 
 // SET STORAGE
-const storage = multer.diskStorage({
-	destination : function(req, file, cb){
-		cb(null, 'uploads');
-	},
-	filename    : function(req, file, cb){
-		cb(null, file.fieldname + '-' + Date.now());
-	}
-});
+// const storage = multer.diskStorage({
+// 	destination : function(req, file, cb){
+// 		cb(null, 'uploads');
+// 	},
+// 	filename    : function(req, file, cb){
+// 		cb(null, file.fieldname + '-' + Date.now());
+// 	}
+// });
 
 const upload = multer({ storage: storage });
 
@@ -219,12 +220,12 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 	console.log(req.body.data);
 	try {
 		if (req.file) {
+			console.log(req.file.buffer);
 			// console.log('req.body.data: ', req.body.dat, req.body.data[1]);
-			console.log('req.data: ', req.data);
 			const gridID = req.body.data;
 			const userGrid = await ACCGrid.findOne({ _id: gridID });
 			const src = fs.readFileSync(req.file.path);
-			pdf(req.file.path)
+			pdf(req.file.buffer)
 				.then(async function(data){
 					let dataArray = [];
 					const { text } = data;
