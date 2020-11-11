@@ -220,12 +220,12 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 	console.log(req.body.data);
 	try {
 		if (req.file) {
-			console.log(req.file.buffer);
+			console.log(req.file[0].buffer);
 			// console.log('req.body.data: ', req.body.dat, req.body.data[1]);
 			const gridID = req.body.data;
 			const userGrid = await ACCGrid.findOne({ _id: gridID });
 			const src = fs.readFileSync(req.file.path);
-			pdf(req.file.buffer)
+			pdf(req.file[0].buffer)
 				.then(async function(data){
 					let dataArray = [];
 					const { text } = data;
