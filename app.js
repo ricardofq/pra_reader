@@ -19,7 +19,7 @@ const Users = require('./models/Users');
 const app = express();
 
 mongoose
-	.connect('mongodb://localhost:27017/cqcentral', {
+	.connect(process.env.DBURL || 'mongodb://localhost:27017/cqcentral', {
 		useNewUrlParser    : true,
 		useCreateIndex     : true,
 		useUnifiedTopology : true
