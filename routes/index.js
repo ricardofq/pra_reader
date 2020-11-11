@@ -235,7 +235,7 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 						let str = text.substring(text.lastIndexOf(`- ${i} -`), text.lastIndexOf(`- ${i + 1} -`));
 						pdfArr.push({ page: i, text: str.replace(/(\r\n|\n|\r)/gm, '') });
 					}
-					console.log(pdfArr[34]);
+					console.log(pdfArr[35]);
 					for (let i = 0; i < userGrid.NG.length; i++) {
 						// let element = userGrid.NG[i];
 						let ngEl = await NG.findOne({ _id: userGrid.NG[i] });
@@ -244,12 +244,18 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 							// console.log(drEl);
 							for (let k = 0; k < drEl.texts.length; k++) {
 								let txtEl = await Text.findOne({ _id: drEl.texts[k] });
-								let { first, last } = txtEl.text;
+								// let { first, last } = txtEl.text;
 								const pagI = pdfArr.find((el) => {
-									return el.text.toLowerCase().includes(first.toLowerCase());
+									return el.text
+										.toLowerCase()
+										.replace(/\s/g, '')
+										.includes(txtEl.text.first.toLowerCase().replace(/\s/g, ''));
 								});
 								const pagF = pdfArr.find((el) => {
-									return el.text.toLowerCase().includes(last.toLowerCase());
+									return el.text
+										.toLowerCase()
+										.replace(/\s/g, '')
+										.includes(txtEl.text.last.toLowerCase().replace(/\s/g, ''));
 								});
 								// dataArray.push({ textID: txtEl._id, pagI: pagI.page, pagF: pagF.page });
 								if (pagF && pagI) {
