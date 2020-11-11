@@ -217,16 +217,18 @@ router.post('/editgrade/:drID', async (req, res) => {
 });
 
 router.post('/postfile', upload.single('file'), async (req, res) => {
-	console.log(req.body.data);
+	// console.log(req.body.data);
 	try {
 		if (req.file) {
-			console.log(req.file[0].buffer);
+			console.log(req.file);
 			// console.log('req.body.data: ', req.body.dat, req.body.data[1]);
 			const gridID = req.body.data;
 			const userGrid = await ACCGrid.findOne({ _id: gridID });
-			const src = fs.readFileSync(req.file.path);
-			pdf(req.file[0].buffer)
+			// const src = fs.readFileSync(req.file.buffer, { encoding: 'utf8' });
+			// console.log('src: ', src);
+			pdf(req.file.buffer)
 				.then(async function(data){
+					console.log(data);
 					let dataArray = [];
 					const { text } = data;
 					let pdfArr = [];
