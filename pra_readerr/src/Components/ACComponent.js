@@ -11,6 +11,7 @@ import { useStyles } from '../styles/ACComponentStyles';
 import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
 // import FormHelperText from '@material-ui/core/FormHelperText';
+import LoadingOverlay from 'react-loading-overlay';
 
 const ACComponent = (props) => {
 	const { acc, allUsers } = props;
@@ -21,6 +22,7 @@ const ACComponent = (props) => {
 	const [ ng, setNg ] = useState([]);
 	const [ dr, setDr ] = useState([]);
 	const [ texts, setTexts ] = useState([]);
+	const [ loadingOverlay, setLoadingOverlay ] = useState(false);
 	const gridRef = useRef();
 	const handleGrid = (grid) => {
 		gridRef.current = grid;
@@ -36,10 +38,10 @@ const ACComponent = (props) => {
 	};
 	const fileSelectHandler = (e) => {
 		e.preventDefault();
+		setLoadingOverlay(true);
 		const files = picUploadRef.current.files;
 		const formData = new FormData();
 		formData.append('file', files[0]);
-		console.log(grid);
 		formData.append('data', grid._id);
 		axios
 			.post(`${apiUrl}/postfile`, formData, { withCredentials: true })
@@ -52,6 +54,7 @@ const ACComponent = (props) => {
 					setNg(data.ng);
 					setDr(data.dr);
 					setTexts(data.texts);
+					setLoadingOverlay(false);
 				});
 			})
 			.catch((error) => {
@@ -182,16 +185,19 @@ const ACComponent = (props) => {
 					</div>
 				</div>
 				<div>
-					<ACCGrid
-						acc={acc}
-						grid={grid}
-						ng={ng}
-						dr={dr}
-						texts={texts}
-						fetchGrid={fetchGrid}
-						username={username}
-						setDr={setDr}
-					/>
+					<LoadingOverlay active={loadingOverlay} spinner text="A fazer magia...">
+						<ACCGrid
+							acc={acc}
+							grid={grid}
+							ng={ng}
+							dr={dr}
+							texts={texts}
+							fetchGrid={fetchGrid}
+							username={username}
+							setDr={setDr}
+							setLoadingOverlay={setLoadingOverlay}
+						/>
+					</LoadingOverlay>
 				</div>
 			</div>
 		</React.Fragment>
