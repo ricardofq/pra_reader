@@ -42,17 +42,19 @@ const UserProfile = (props) => {
 							{displayUser.birthday && format(parseISO(displayUser.birthday), 'dd/MM/yyy')}
 						</ListItem>
 					</List>
-					<List className={classes.UserProfile}>
-						<ListItem>
-							<Link to={`/utilizador/${displayUser.username}/cp`}>CP</Link>
-						</ListItem>
-						<ListItem>
-							<Link to={`/utilizador/${displayUser.username}/clc`}>CLC</Link>
-						</ListItem>
-						<ListItem>
-							<Link to={`/utilizador/${displayUser.username}/stc`}>STC</Link>
-						</ListItem>
-					</List>
+					{displayUser.isCandidate && (
+						<List className={classes.UserProfile}>
+							<ListItem>
+								<Link to={`/utilizador/${displayUser.username}/cp`}>CP</Link>
+							</ListItem>
+							<ListItem>
+								<Link to={`/utilizador/${displayUser.username}/clc`}>CLC</Link>
+							</ListItem>
+							<ListItem>
+								<Link to={`/utilizador/${displayUser.username}/stc`}>STC</Link>
+							</ListItem>
+						</List>
+					)}
 				</React.Fragment>
 			)}
 		</div>

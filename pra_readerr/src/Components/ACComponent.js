@@ -36,6 +36,7 @@ const ACComponent = (props) => {
 		e.preventDefault();
 		setInputValue(e.target.value.replace(/(\r\n|\n|\r)/gm, ''));
 	};
+	const [ isFile, setIsFile ] = useState(false);
 	const fileSelectHandler = (e) => {
 		e.preventDefault();
 		setLoadingOverlay(true);
@@ -59,7 +60,14 @@ const ACComponent = (props) => {
 			})
 			.catch((error) => {
 				console.log(error);
+				setLoadingOverlay(false);
 			});
+	};
+	const handleFile = (e) => {
+		e.preventDefault();
+		if (e.target.value) {
+			setIsFile(true);
+		}
 	};
 	const fetchGrid = useCallback(async (source, acc, username) => {
 		const result = await axios.get(`${apiUrl}/${acc}/${username}/usergrid`, {
@@ -178,11 +186,13 @@ const ACComponent = (props) => {
 						</div>
 					</div>
 					<div>
-						<input ref={picUploadRef} id="selectImage" type="file" />
+						<input onChange={handleFile} ref={picUploadRef} id="selectImage" type="file" />
 					</div>
-					<div>
-						<button onClick={fileSelectHandler}>Obter Páginas</button>
-					</div>
+					{isFile && (
+						<div>
+							<button onClick={fileSelectHandler}>Obter Páginas</button>
+						</div>
+					)}
 				</div>
 				<div>
 					<LoadingOverlay active={loadingOverlay} spinner text="A fazer magia...">
