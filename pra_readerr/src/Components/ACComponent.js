@@ -96,6 +96,12 @@ const ACComponent = (props) => {
 	);
 	const [ ngSelectValue, setNGSelectValue ] = useState('');
 	const [ drSelectValue, setDRSelectValue ] = useState('');
+	const handleReset = (e) => {
+		e.preventDefault();
+		setNGSelectValue('');
+		setDRSelectValue('');
+		setInputValue('');
+	};
 	const ngSelectRef = useRef();
 	const drSelectRef = useRef();
 	const ngOpts = ng.map((el, idx) => {
@@ -117,19 +123,23 @@ const ACComponent = (props) => {
 	const [ drOpts, setDROpts ] = useState([]);
 	const handleAddText = async (e) => {
 		e.preventDefault();
-		const result = await axios.post(
-			`${apiUrl}/postdrtext/${drSelectValue}`,
-			{ inputValue: inputValue },
-			{ withCredentials: true }
-		);
-		console.log(result);
-		if (result.status === 200) {
-			const source = axios.CancelToken.source();
-			const grid = await fetchGrid(source, acc, username);
-			console.log(grid);
-			setTexts(grid.texts);
-			setDr(grid.dr);
-			source.cancel('cancel');
+		if (ngSelectValue !== '' && drSelectValue !== '') {
+			const result = await axios.post(
+				`${apiUrl}/postdrtext/${drSelectValue}`,
+				{ inputValue: inputValue },
+				{ withCredentials: true }
+			);
+			console.log(result);
+			if (result.status === 200) {
+				const source = axios.CancelToken.source();
+				const grid = await fetchGrid(source, acc, username);
+				console.log(grid);
+				setTexts(grid.texts);
+				setDr(grid.dr);
+				source.cancel('cancel');
+			}
+		} else {
+			window.alert('NG e DR não podem estar vazios');
 		}
 	};
 	useEffect(
@@ -160,7 +170,12 @@ const ACComponent = (props) => {
 					<div className={classes.selectedNGDRContainer}>
 						<div style={{ display: 'flex', flexDirection: 'column' }}>
 							<InputLabel>NG</InputLabel>
-							<NativeSelect value={ngSelectValue} ref={ngSelectRef} onChange={handleNGSelectChange}>
+							<NativeSelect
+								value={ngSelectValue}
+								ref={ngSelectRef}
+								onChange={handleNGSelectChange}
+								required
+							>
 								<option value=""> - </option>
 								{ngOpts}
 							</NativeSelect>
@@ -174,6 +189,7 @@ const ACComponent = (props) => {
 										// defaultValue={dr[0] && dr[0]._id}
 										value={drSelectValue}
 										onChange={handleDRSelectChange}
+										required
 									>
 										<option value=""> - </option>
 										{displayDROpts}
@@ -181,8 +197,16 @@ const ACComponent = (props) => {
 								</React.Fragment>
 							)}
 						</div>
-						<div style={{ display: 'flex', alignItems: 'center', gridColumn: '-1 / 1' }}>
+						<div
+							style={{
+								display        : 'flex',
+								alignItems     : 'center',
+								justifyContent : 'space-between',
+								gridColumn     : '-1 / 1'
+							}}
+						>
 							<button onClick={handleAddText}>Adicionar Texto</button>
+							<button onClick={handleReset}>Limpar</button>
 						</div>
 					</div>
 					<div>

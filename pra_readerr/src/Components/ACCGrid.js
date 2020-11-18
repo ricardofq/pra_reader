@@ -16,7 +16,7 @@ import { apiUrl, gradeColors } from '../utils/utils';
 import axios from 'axios';
 
 function TabPanel(props){
-	const { dr, value, index, texts, fetchGrid, username, acc, setDr, classes, ...other } = props;
+	const { dr, value, index, texts, fetchGrid, username, acc, setDr, classes, setLoadingOverlay, ...other } = props;
 
 	const displayDRtext = dr.texts.map((el, idx) => {
 		const txtRef = React.createRef();
@@ -39,15 +39,20 @@ function TabPanel(props){
 		};
 		const handleDeleteText = async (e, txtID) => {
 			e.preventDefault();
-			console.log(txtID);
-			const result = await axios.post(`${apiUrl}/deletetxt/${txtID}`);
-			if (result.data.msg === 'Text deleted') {
-				const source = axios.CancelToken.source();
-				fetchGrid(source, acc, username).then((data) => {
-					setDr(data.dr);
-					setEditGrade(false);
-					source.cancel('cancel');
-				});
+			setLoadingOverlay(true);
+			if (window.confirm('Deseja apagar este texto?')) {
+				const result = await axios.post(`${apiUrl}/deletetxt/${txtID}`);
+				if (result.data.msg === 'Text deleted') {
+					const source = axios.CancelToken.source();
+					fetchGrid(source, acc, username).then((data) => {
+						setDr(data.dr);
+						setEditGrade(false);
+						source.cancel('cancel');
+						setLoadingOverlay(false);
+					});
+				}
+			} else {
+				setLoadingOverlay(false);
 			}
 		};
 		return (
@@ -68,7 +73,10 @@ function TabPanel(props){
 					{txt && ` - Pág. ${txt.pagI} a Pág. ${txt.pagF}`}
 				</span>
 				<span>
-					<CancelIcon onClick={(e) => handleDeleteText(e, txt._id)} />
+					<CancelIcon
+						onClick={(e) => handleDeleteText(e, txt._id)}
+						style={{ marginLeft: '1rem', color: gradeColors[1] }}
+					/>
 				</span>
 			</Typography>
 		);
@@ -190,7 +198,7 @@ function a11yProps(index){
 
 export default function VerticalTabs(props){
 	// eslint-disable-next-line
-	const { acc, grid, ng, dr, texts, fetchGrid, username, setDr } = props;
+	const { acc, grid, ng, dr, texts, fetchGrid, username, setDr, setLoadingOverlay } = props;
 	// console.log(texts);
 	const classes = useStyles();
 	const [ value, setValue ] = useState(0);
@@ -213,6 +221,7 @@ export default function VerticalTabs(props){
 				index={index}
 				texts={texts}
 				classes={classes}
+				setLoadingOverlay={setLoadingOverlay}
 			/>
 		);
 	});
