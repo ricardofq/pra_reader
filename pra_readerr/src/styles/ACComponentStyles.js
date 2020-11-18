@@ -1,6 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles((theme) => ({
+	ACComponentContainer  : {
+		width : '100%'
+	},
 	ACComponent           : {
 		padding                       : '2rem',
 		display                       : 'grid',

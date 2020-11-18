@@ -8,7 +8,8 @@ export const useStyles = makeStyles((theme) => ({
 		display        : 'flex',
 		alignItems     : 'center',
 		justifyContent : 'center',
-		alignSelf      : 'center'
+		alignSelf      : 'center',
+		padding        : '1.5rem'
 	},
 	RegisterForm                       : {
 		display                        : 'flex',

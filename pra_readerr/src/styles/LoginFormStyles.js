@@ -8,6 +8,7 @@ export const useStyles = makeStyles((theme) => ({
 		display                      : 'flex',
 		alignItems                   : 'center',
 		justifyContent               : 'center',
+		padding                      : '1.5rem',
 		[theme.breakpoints.up('md')]: {
 			alignSelf : 'center'
 		}

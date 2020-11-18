@@ -41,45 +41,49 @@ function App(){
 	return (
 		<div className={classes.App}>
 			<Menu user={user} />
-			<Switch>
-				<Route exact path="/login" component={() => <LoginForm handleLogin={handleLogin} />} />
-				<Route
-					exact
-					path="/registo"
-					component={() => <RegisterForm user={user} fetchAllUsers={fetchAllUsers} allGroups={allGroups} />}
-				/>
-				<Route
-					exact
-					path="/utilizador/:username"
-					component={() => <UserProfile user={user} allUsers={allUsers} allGroups={allGroups} />}
-				/>
-				<Route
-					exact
-					path="/utilizadores"
-					component={() => <UsersList user={user} allUsers={allUsers} allGroups={allGroups} />}
-				/>
-				<Route
-					exact
-					path="/utilizador/:username/cp"
-					component={() => <ACComponent user={user} allUsers={allUsers} acc="cp" />}
-				/>
-				<Route
-					exact
-					path="/utilizador/:username/clc"
-					component={() => <ACComponent user={user} allUsers={allUsers} acc="clc" />}
-				/>
-				<Route
-					exact
-					path="/utilizador/:username/stc"
-					component={() => <ACComponent allUsers={allUsers} acc="stc" />}
-				/>
-				<Route exact path="/admin" component={() => <AdminPanel />} />
-				<Route
-					exact
-					path="/admin/addgroup"
-					component={() => <AddGroup user={user} fetchAllGroups={fetchAllGroups} />}
-				/>
-			</Switch>
+			<div className={classes.main}>
+				<Switch>
+					<Route exact path="/login" component={() => <LoginForm handleLogin={handleLogin} />} />
+					<Route
+						exact
+						path="/registo"
+						component={() => (
+							<RegisterForm user={user} fetchAllUsers={fetchAllUsers} allGroups={allGroups} />
+						)}
+					/>
+					<Route
+						exact
+						path="/utilizador/:username"
+						component={() => <UserProfile user={user} allUsers={allUsers} allGroups={allGroups} />}
+					/>
+					<Route
+						exact
+						path="/utilizadores"
+						component={() => <UsersList user={user} allUsers={allUsers} allGroups={allGroups} />}
+					/>
+					<Route
+						exact
+						path="/utilizador/:username/cp"
+						component={() => <ACComponent user={user} allUsers={allUsers} acc="cp" />}
+					/>
+					<Route
+						exact
+						path="/utilizador/:username/clc"
+						component={() => <ACComponent user={user} allUsers={allUsers} acc="clc" />}
+					/>
+					<Route
+						exact
+						path="/utilizador/:username/stc"
+						component={() => <ACComponent allUsers={allUsers} acc="stc" />}
+					/>
+					<Route exact path="/admin" component={() => <AdminPanel />} />
+					<Route
+						exact
+						path="/admin/addgroup"
+						component={() => <AddGroup user={user} fetchAllGroups={fetchAllGroups} />}
+					/>
+				</Switch>
+			</div>
 		</div>
 	);
 }

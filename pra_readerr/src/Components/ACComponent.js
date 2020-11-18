@@ -156,14 +156,14 @@ const ACComponent = (props) => {
 		</option>
 	));
 	return (
-		<React.Fragment>
+		<div className={classes.ACComponentContainer}>
 			<h1 style={{ padding: '0 2rem' }}>
 				{acc.toUpperCase()} - {`${user.name} ${user.lname.split(' ').splice(-1)}`}
 			</h1>
 			<div className={classes.ACComponent}>
-				<div>
+				<div style={{ display: 'flex', flexDirection: 'column' }}>
 					<textarea
-						style={{ height: '200px', width: 'calc(400px - 4rem)', padding: '2rem' }}
+						style={{ height: '200px', padding: '2rem' }}
 						value={inputValue}
 						onChange={(e) => handleChange(e)}
 					/>
@@ -234,7 +234,7 @@ const ACComponent = (props) => {
 					</LoadingOverlay>
 				</div>
 			</div>
-		</React.Fragment>
+		</div>
 	);
 };
 
