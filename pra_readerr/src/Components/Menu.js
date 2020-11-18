@@ -14,14 +14,16 @@ import { List } from '@material-ui/core';
 export default function SimpleMenu(props){
 	const { user } = props;
 	const classes = useStyles();
-	const [ anchorEl, setAnchorEl ] = useState(false);
-	const [ drawerSt, handleDrawerSt ] = useState(false);
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget);
+	// const [ anchorEl, setAnchorEl ] = useState(false);
+	const [ drawerSt, setDrawerSt ] = useState(false);
+	const handleClick = (e) => {
+		e.preventDefault();
+		// setAnchorEl(event.currentTarget);
+		setDrawerSt(!drawerSt);
 	};
 
 	const handleClose = () => {
-		setAnchorEl(null);
+		setDrawerSt(false);
 	};
 
 	return (
@@ -38,7 +40,7 @@ export default function SimpleMenu(props){
 				<MenuRoundedIcon />
 			</Button>
 			<img className={classes.MenuLogo} src="/cqadrimag_logo.png" alt="cqadrimag_logo" />
-			<Drawer anchor={'left'} open={anchorEl} onClose={handleClose}>
+			<Drawer anchor={'left'} open={drawerSt} onClose={handleClose}>
 				<div className={classes.Menu}>
 					<List>
 						<ListItem onClick={handleClose}>
