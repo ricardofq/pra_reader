@@ -13,8 +13,8 @@ const LoginForm = (props) => {
 	const classes = useStyles();
 	const history = useHistory();
 	const { handleLogin } = props;
-	const [ username, setUsername ] = useState('admin');
-	const [ password, setPassword ] = useState('YDb:_PfEN3qTd7D');
+	const [ username, setUsername ] = useState('');
+	const [ password, setPassword ] = useState('');
 	const handleInput = (e, input) => {
 		input(e.target.value);
 	};

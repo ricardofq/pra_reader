@@ -14,7 +14,7 @@ import { List } from '@material-ui/core';
 export default function SimpleMenu(props){
 	const { user } = props;
 	const classes = useStyles();
-	const [ anchorEl, setAnchorEl ] = useState(null);
+	const [ anchorEl, setAnchorEl ] = useState(false);
 	const [ drawerSt, handleDrawerSt ] = useState(false);
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -27,11 +27,11 @@ export default function SimpleMenu(props){
 	return (
 		<div
 			style={{
-				display: 'grid',
-				gridTemplateColumns: '80px auto',
-				gridGap: '1rem',
-				alignItems: 'center',
-				height: '110px'
+				display             : 'grid',
+				gridTemplateColumns : '80px auto',
+				gridGap             : '1rem',
+				alignItems          : 'center',
+				height              : '110px'
 			}}
 		>
 			<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
