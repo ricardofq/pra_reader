@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme) => ({
 	},
 	UsersListRow       : {
 		display             : 'grid',
-		gridTemplateColumns : '180px 150px 150px 50px 50px 50px',
+		gridTemplateColumns : '200px 150px 50px 50px 50px',
 		padding             : '0',
 		'& li'              : {
 			padding : '.5rem'
