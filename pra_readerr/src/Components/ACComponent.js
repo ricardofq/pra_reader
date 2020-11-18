@@ -29,8 +29,8 @@ const ACComponent = (props) => {
 		setGrid(grid);
 	};
 	const [ inputValue, setInputValue ] = useState('');
-	const [ pageI, setPageI ] = useState('');
-	const [ pageF, setPageF ] = useState('');
+	// const [ pageI, setPageI ] = useState('');
+	// const [ pageF, setPageF ] = useState('');
 	const picUploadRef = useRef();
 	const handleChange = (e) => {
 		e.preventDefault();
@@ -47,7 +47,7 @@ const ACComponent = (props) => {
 		axios
 			.post(`${apiUrl}/postfile`, formData, { withCredentials: true })
 			.then((response) => {
-				const { pageI, pageF } = response.data;
+				// const { pageI, pageF } = response.data;
 				console.log(response);
 				const source = axios.CancelToken.source();
 				fetchGrid(source, acc, username).then((data) => {

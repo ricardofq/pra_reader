@@ -7,6 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Box from '@material-ui/core/Box';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import { useStyles } from '../styles/ACCGridStyles';
 
@@ -36,10 +37,23 @@ function TabPanel(props){
 				fullTxt = !fullTxt;
 			}
 		};
+		const handleDeleteText = async (e, txtID) => {
+			e.preventDefault();
+			console.log(txtID);
+			const result = await axios.post(`${apiUrl}/deletetxt/${txtID}`);
+			if (result.data.msg === 'Text deleted') {
+				const source = axios.CancelToken.source();
+				fetchGrid(source, acc, username).then((data) => {
+					setDr(data.dr);
+					setEditGrade(false);
+					source.cancel('cancel');
+				});
+			}
+		};
 		return (
 			<Typography
 				// className={classes.ACCGridTxtEl}
-				onClick={(e) => handleClick(e)}
+
 				key={`${dr._id}dr${index + 1}${idx}`}
 				gutterBottom
 				paragraph
@@ -47,11 +61,14 @@ function TabPanel(props){
 				<span className={classes.ACCGridTxtElBullet} style={{ color: '#7d6fe4' }}>
 					{'\u2B24'}
 				</span>
-				<span className={classes.ACCGridTxtEl} ref={txtRef}>
+				<span onClick={(e) => handleClick(e)} className={classes.ACCGridTxtEl} ref={txtRef}>
 					<span>{txt && `${txt.text.first} (...) ${txt.text.last}`}</span>
 				</span>
 				<span className={txt && txt.pagI && txt.pagF ? classes.withPage : classes.noPage}>
 					{txt && ` - Pág. ${txt.pagI} a Pág. ${txt.pagF}`}
+				</span>
+				<span>
+					<CancelIcon onClick={(e) => handleDeleteText(e, txt._id)} />
 				</span>
 			</Typography>
 		);
@@ -177,7 +194,7 @@ export default function VerticalTabs(props){
 	// console.log(texts);
 	const classes = useStyles();
 	const [ value, setValue ] = useState(0);
-	const [ editingGrade, setEditingGrade ] = useState(false);
+	// const [ editingGrade, setEditingGrade ] = useState(false);
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
@@ -186,8 +203,6 @@ export default function VerticalTabs(props){
 		let index = ng.find((ngEl) => ngEl._id === el.ng).number - 1;
 		return (
 			<TabPanel
-				editingGrade={editingGrade}
-				setEditingGrade={setEditingGrade}
 				fetchGrid={fetchGrid}
 				username={username}
 				setDr={setDr}

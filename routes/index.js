@@ -306,4 +306,17 @@ router.get('/allgroups/', async (req, res) => {
 	}
 });
 
+router.post('/deletetxt/:txtID', async (req, res) => {
+	try {
+		const { txtID } = req.params;
+		const txt2Delete = await Text.findById(txtID);
+		const txtDR = await DR.findOneAndUpdate({ _id: txt2Delete.dr }, { $pull: { texts: txt2Delete._id } });
+		await Text.findByIdAndRemove(txtID);
+		res.send({ msg: 'Text deleted' });
+	} catch (error) {
+		console.log(error);
+		res.send({ msg: 'Something went wrong', error: error });
+	}
+});
+
 module.exports = router;
