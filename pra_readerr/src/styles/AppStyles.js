@@ -8,7 +8,7 @@ export const useStyles = makeStyles((theme) => ({
 	},
 	main : {
 		display        : 'flex',
-		minHeight      : 'calc(100vh - 110px)',
+		minHeight      : 'calc(100vh - 140px)',
 		alignItems     : 'center',
 		justifyContent : 'center'
 	}

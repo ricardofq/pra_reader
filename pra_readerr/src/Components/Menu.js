@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import ListItem from '@material-ui/core/ListItem';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import Drawer from '@material-ui/core/Drawer';
 import { Link } from 'react-router-dom';
 
 import { useStyles } from '../styles/MenuStyles.js';
 
-import { isEmpty } from '../utils/utils';
-import { List } from '@material-ui/core';
+import { isEmpty, colors } from '../utils/utils';
+import { List, ListItem, Drawer, Button } from '@material-ui/core';
 
 export default function SimpleMenu(props){
 	const { user } = props;
@@ -29,18 +25,36 @@ export default function SimpleMenu(props){
 	return (
 		<div
 			style={{
-				display             : 'grid',
-				gridTemplateColumns : '80px auto',
-				gridGap             : '1rem',
-				alignItems          : 'center',
-				height              : '110px'
+				display         : 'grid',
+				// gridTemplateColumns : '80px auto',
+				gridGap         : '1rem',
+				alignItems      : 'center',
+				height          : '140px',
+				backgroundColor : colors.darkblue
 			}}
 		>
-			<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-				<MenuRoundedIcon />
-			</Button>
-			<img className={classes.MenuLogo} src="/cqadrimag_logo.png" alt="cqadrimag_logo" />
-			<Drawer anchor={'left'} open={drawerSt} onClose={handleClose}>
+			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+				<div style={{ display: 'flex', alignItems: 'center' }}>
+					<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+						<MenuRoundedIcon style={{ color: colors.red }} />
+					</Button>
+					<Link to="/">
+						<img className={classes.MenuLogo} src="/cqadrimag_logo.png" alt="cqadrimag_logo" />
+					</Link>
+				</div>
+				<div style={{ display: 'flex', alignItems: 'center', margin: '1rem' }}>
+					{isEmpty(user) ? (
+						<Link style={{ color: colors.white }} to="/login">
+							Login
+						</Link>
+					) : (
+						<Link style={{ color: colors.white }} to={`/utilizador/${user.username}`}>
+							{user.name}
+						</Link>
+					)}
+				</div>
+			</div>
+			<Drawer className={classes.Drawer} anchor={'left'} open={drawerSt} onClose={handleClose}>
 				<div className={classes.Menu}>
 					<List>
 						<ListItem onClick={handleClose}>
@@ -51,15 +65,15 @@ export default function SimpleMenu(props){
 								<Link to="/login">Login</Link>
 							</ListItem>
 						)}
-						{!isEmpty(user) &&
+						{/* {!isEmpty(user) &&
 						user.isAdmin && (
 							<ListItem onClick={handleClose}>
 								<Link to="/registo">Registo</Link>
 							</ListItem>
-						)}
+						)} */}
 						{!isEmpty(user) && (
 							<ListItem onClick={handleClose}>
-								<Link to={`/utilizador/${user.username}`}>{user.name}</Link>
+								<Link to={`/utilizador/${user.username}`}>Meu Perfil</Link>
 							</ListItem>
 						)}
 						{!isEmpty(user) &&

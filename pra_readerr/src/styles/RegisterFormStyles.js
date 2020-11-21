@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { colors } from '../utils/utils';
 
 // import { colors } from '../utils';
 
@@ -29,9 +30,10 @@ export const useStyles = makeStyles((theme) => ({
 		}
 	},
 	RegisterFormForm                   : {
-		padding : '1em',
-		width   : '100%',
-		'& h1'  : {
+		padding         : '1em',
+		width           : '100%',
+		backgroundColor : colors.lightblue,
+		'& h1'          : {
 			padding : '0 .5em'
 		}
 	},

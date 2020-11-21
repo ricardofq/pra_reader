@@ -8,10 +8,12 @@ import SaveIcon from '@material-ui/icons/Save';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Box from '@material-ui/core/Box';
 import CancelIcon from '@material-ui/icons/Cancel';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
+import NGLabel from './NGLabel';
 import { useStyles } from '../styles/ACCGridStyles';
 
-import { apiUrl, gradeColors } from '../utils/utils';
+import { apiUrl, gradeColors, colors, isValidated } from '../utils/utils';
 
 import axios from 'axios';
 
@@ -23,17 +25,17 @@ function TabPanel(props){
 		let txt = texts.find((txt) => {
 			return txt._id === el;
 		});
-		if (txtRef.current) txtRef.current.textContent = `${txt.text.fullText}`;
+		if (txtRef.current) txtRef.current.childNodes[0].textContent = `${txt.text.fullText}`;
 		let fullTxt = false;
 		const handleClick = (e) => {
 			e.preventDefault();
 			console.log(fullTxt);
 			console.log(txtRef.current);
 			if (!fullTxt) {
-				txtRef.current.textContent = `${txt.text.fullText}`;
+				txtRef.current.childNodes[0].textContent = `${txt.text.fullText}`;
 				fullTxt = !fullTxt;
 			} else {
-				txtRef.current.textContent = `${txt.text.first} (...) ${txt.text.last}`;
+				txtRef.current.childNodes[0].textContent = `${txt.text.first} (...) ${txt.text.last}`;
 				fullTxt = !fullTxt;
 			}
 		};
@@ -57,26 +59,23 @@ function TabPanel(props){
 		};
 		return (
 			<Typography
-				// className={classes.ACCGridTxtEl}
-
+				className={classes.ACCGridTxtElContainer}
 				key={`${dr._id}dr${index + 1}${idx}`}
 				gutterBottom
 				paragraph
 			>
-				<span className={classes.ACCGridTxtElBullet} style={{ color: '#7d6fe4' }}>
-					{'\u2B24'}
-				</span>
-				<span onClick={(e) => handleClick(e)} className={classes.ACCGridTxtEl} ref={txtRef}>
-					<span>{txt && `${txt.text.first} (...) ${txt.text.last}`}</span>
-				</span>
-				<span className={txt && txt.pagI && txt.pagF ? classes.withPage : classes.noPage}>
-					{txt && ` - Pág. ${txt.pagI} a Pág. ${txt.pagF}`}
-				</span>
+				{/* <span className={classes.ACCGridTxtElBullet}>{'\u2B24'}</span> */}
 				<span>
 					<CancelIcon
 						onClick={(e) => handleDeleteText(e, txt._id)}
-						style={{ marginLeft: '1rem', color: gradeColors[1] }}
+						style={{ marginRight: '1rem', color: gradeColors[1] }}
 					/>
+				</span>
+				<span onClick={(e) => handleClick(e)} className={classes.ACCGridTxtEl} ref={txtRef}>
+					<span>{txt && `${txt.text.first} (...) ${txt.text.last}`}</span>
+					<span className={txt && txt.pagI && txt.pagF ? classes.withPage : classes.noPage}>
+						{txt && ` - Pág. ${txt.pagI} a Pág. ${txt.pagF}`}
+					</span>
 				</span>
 			</Typography>
 		);
@@ -88,6 +87,7 @@ function TabPanel(props){
 	};
 	const [ drGrade, setDrGrade ] = useState(dr.grade);
 	const handleSaveGrade = async (e) => {
+		setLoadingGrade(true);
 		const source = axios.CancelToken.source();
 		console.log(e);
 		const result = await axios.post(
@@ -99,14 +99,18 @@ function TabPanel(props){
 			fetchGrid(source, acc, username).then((data) => {
 				setDr(data.dr);
 				setEditGrade(false);
+				setLoadingGrade(false);
 				source.cancel('cancel');
 			});
+		} else {
+			setLoadingGrade(false);
 		}
 	};
 	const handleDrGrade = (e) => {
 		e.preventDefault();
 		setDrGrade(e.target.value);
 	};
+	const [ loadingGrade, setLoadingGrade ] = useState(false);
 	return (
 		<div
 			role="tabpanel"
@@ -116,34 +120,19 @@ function TabPanel(props){
 			{...other}
 		>
 			{value === index && (
-				<Box
-					style={{
-						border     : '1px solid #7d6fe4',
-						borderLeft : 'none',
-						paddingTop : '0',
-						fontWeight : '900'
-					}}
-					p={3}
-				>
-					<div
-						style={{
-							margin          : '0 -1.5rem 1rem',
-							backgroundColor : '#161925',
-							padding         : '1rem',
-							color           : 'white'
-						}}
-					>
-						<Typography variant="h6">{`DR${dr.number}`}</Typography>
-						<div style={{ display: 'flex' }}>
-							{!editGrade ? (
+				<Box className={classes.BoxContainer} p={3}>
+					<div className={classes.Box}>
+						<Typography style={{ fontWeight: '900' }} variant="h6">{`DR${dr.number}`}</Typography>
+						<div style={{ width: editGrade ? '200px' : '150px' }} className={classes.BoxGradeContainer}>
+							{!loadingGrade ? !editGrade ? (
 								<React.Fragment>
 									<Typography
-										style={{ color: gradeColors[dr.grade] }}
+										style={{ color: gradeColors[dr.grade], fontWeight: '900' }}
 										variant="subtitle1"
 									>{`Nota: ${dr.grade}`}</Typography>
 									<EditIcon
 										onClick={(e) => handleEditGrade(e)}
-										style={{ margin: '0 1rem', color: '#7d6fe4' }}
+										style={{ margin: '0 1rem', color: colors.darkblue }}
 									/>
 								</React.Fragment>
 							) : (
@@ -169,10 +158,12 @@ function TabPanel(props){
 										<option value="5">5</option>
 									</NativeSelect>
 									<SaveIcon
-										style={{ margin: '0 1rem', color: '#7d6fe4' }}
+										style={{ margin: '0 1rem', color: colors.darkblue }}
 										onClick={(e) => handleSaveGrade(e)}
 									/>
 								</React.Fragment>
+							) : (
+								<CircularProgress />
 							)}
 						</div>
 					</div>
@@ -206,7 +197,14 @@ export default function VerticalTabs(props){
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
-	const displayNG = ng.map((el) => <Tab key={el._id} label={`NG${el.number}`} {...a11yProps(el.number - 1)} />);
+	const displayNG = ng.map((el) => {
+		let grades = [];
+		if (el.dr.length && dr.length) {
+			grades = el.dr.map((drID) => parseInt(dr.find((dr) => dr._id === drID).grade));
+		}
+		return <Tab key={el._id} label={<NGLabel num={el.number} grades={grades} />} {...a11yProps(el.number - 1)} />;
+	});
+
 	const displayDR = dr.map((el) => {
 		let index = ng.find((ngEl) => ngEl._id === el.ng).number - 1;
 		return (

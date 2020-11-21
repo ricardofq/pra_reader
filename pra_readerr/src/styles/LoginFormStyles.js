@@ -1,4 +1,4 @@
-// import { colors } from '../utils';
+import { colors } from '../utils/utils';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -58,12 +58,12 @@ export const useStyles = makeStyles((theme) => ({
 		}
 	},
 	LogInBtn                : {
-		// backgroundColor : colors.black,
-		// color           : colors.yellow,
-		borderRadius : '5px',
-		fontSize     : '1.25rem',
-		fontWeight   : '700',
-		boxShadow    : '0px 0px 0px .5px rgba(255, 255, 255, .37)',
-		padding      : '1rem'
+		backgroundColor : colors.red,
+		color           : colors.white,
+		borderRadius    : '5px',
+		fontSize        : '1.25rem',
+		fontWeight      : '700',
+		boxShadow       : '0px 0px 0px .5px rgba(255, 255, 255, .37)',
+		padding         : '1rem'
 	}
 }));

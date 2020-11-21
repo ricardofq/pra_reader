@@ -89,7 +89,9 @@ const UsersList = (props) => {
 					</List>
 				</ListItem>
 			</List>
-			<List className={classes.UsersListContainer}>{displayAllUsers}</List>
+			<List className={classes.UsersListContainer} style={{ height: '400px', overflowY: 'scroll' }}>
+				{displayAllUsers}
+			</List>
 		</div>
 	);
 };

@@ -2,7 +2,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles((theme) => ({
 	ACComponentContainer  : {
-		width : '100%'
+		width  : '100%',
+		'& h1' : {
+			padding : '2rem',
+			margin  : '0'
+		}
 	},
 	ACComponent           : {
 		padding                       : '2rem',
@@ -21,8 +25,8 @@ export const useStyles = makeStyles((theme) => ({
 	selectedNGDRContainer : {
 		display      : 'grid',
 		gridTemplate : 'auto 50px / auto auto',
-		gridGap      : '0.75rem',
-		margin       : '1rem 0',
+		gridGap      : '3rem',
+		margin       : '2.5rem 0',
 		width        : '100%'
 	}
 }));

@@ -64,7 +64,9 @@ function App(){
 					<Route
 						exact
 						path="/utilizador/:username/cp"
-						component={() => <ACComponent user={user} allUsers={allUsers} acc="cp" />}
+						component={() => (
+							<ACComponent user={user} allUsers={allUsers} acc="cp" defaultProps={{ emptyValue: '' }} />
+						)}
 					/>
 					<Route
 						exact

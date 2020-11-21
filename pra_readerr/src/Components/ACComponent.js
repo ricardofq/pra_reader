@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 
 import ACCGrid from './ACCGrid';
-import { apiUrl } from '../utils/utils';
+import { apiUrl, colors } from '../utils/utils';
 
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -10,11 +10,15 @@ import { useStyles } from '../styles/ACComponentStyles';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import PublishIcon from '@material-ui/icons/Publish';
+// import FormControl from '@material-ui/core/FormControl';
+// import option from '@material-ui/core/option';
 // import FormHelperText from '@material-ui/core/FormHelperText';
 import LoadingOverlay from 'react-loading-overlay';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ACComponent = (props) => {
-	const { acc, allUsers } = props;
+	const { acc, allUsers, defaultProps } = props;
 	const classes = useStyles();
 	const { username } = useParams();
 	const user = allUsers.find((el) => el.username === username);
@@ -22,7 +26,8 @@ const ACComponent = (props) => {
 	const [ ng, setNg ] = useState([]);
 	const [ dr, setDr ] = useState([]);
 	const [ texts, setTexts ] = useState([]);
-	const [ loadingOverlay, setLoadingOverlay ] = useState(false);
+	const [ loadingOverlay, setLoadingOverlay ] = useState(true);
+	// const [ gridOverlay, setGridOverlay ] = useState(true);
 	const gridRef = useRef();
 	const handleGrid = (grid) => {
 		gridRef.current = grid;
@@ -48,7 +53,6 @@ const ACComponent = (props) => {
 			.post(`${apiUrl}/postfile`, formData, { withCredentials: true })
 			.then((response) => {
 				// const { pageI, pageF } = response.data;
-				console.log(response);
 				const source = axios.CancelToken.source();
 				fetchGrid(source, acc, username).then((data) => {
 					handleGrid(data.grid);
@@ -65,6 +69,7 @@ const ACComponent = (props) => {
 	};
 	const handleFile = (e) => {
 		e.preventDefault();
+		console.log(picUploadRef.current);
 		if (e.target.value) {
 			setIsFile(true);
 		}
@@ -84,6 +89,7 @@ const ACComponent = (props) => {
 				setNg(data.ng);
 				setDr(data.dr);
 				setTexts(data.texts);
+				setLoadingOverlay(false);
 			});
 			return () => {
 				handleGrid({});
@@ -113,40 +119,48 @@ const ACComponent = (props) => {
 	});
 	const handleNGSelectChange = (e) => {
 		e.preventDefault();
+		// e.stopPropagation();
 		setNGSelectValue(e.target.value);
 		setDRSelectValue(drSelectRef.current.children[0].value);
 	};
 	const handleDRSelectChange = (e) => {
 		e.preventDefault();
+		// e.stopPropagation();
 		setDRSelectValue(e.target.value);
 	};
 	const [ drOpts, setDROpts ] = useState([]);
 	const handleAddText = async (e) => {
 		e.preventDefault();
-		if (ngSelectValue !== '' && drSelectValue !== '') {
+		if (ngSelectValue !== '' && drSelectValue !== '' && inputValue !== '') {
+			setAddingTxt(true);
 			const result = await axios.post(
 				`${apiUrl}/postdrtext/${drSelectValue}`,
 				{ inputValue: inputValue },
 				{ withCredentials: true }
 			);
-			console.log(result);
 			if (result.status === 200) {
 				const source = axios.CancelToken.source();
 				const grid = await fetchGrid(source, acc, username);
-				console.log(grid);
 				setTexts(grid.texts);
 				setDr(grid.dr);
+				setAddingTxt(false);
 				source.cancel('cancel');
 			}
 		} else {
-			window.alert('NG e DR não podem estar vazios');
+			setAddingTxt(false);
+			window.alert('Área de Texto, NG e DR não podem estar vazios');
 		}
 	};
+
+	const [ addingTxt, setAddingTxt ] = useState(false);
+
 	useEffect(
 		() => {
-			let selectedNG = ngSelectRef.current.children[0].value;
-			let drOpts = dr.filter((el) => el.ng === selectedNG);
-			setDROpts(drOpts);
+			if (ngSelectRef.current) {
+				let selectedNG = ngSelectRef.current.children[0].value;
+				let drOpts = dr.filter((el) => el.ng === selectedNG);
+				setDROpts(drOpts);
+			}
 		},
 		[ dr, ngSelectValue ]
 	);
@@ -157,83 +171,127 @@ const ACComponent = (props) => {
 	));
 	return (
 		<div className={classes.ACComponentContainer}>
-			<h1 style={{ padding: '0 2rem' }}>
-				{acc.toUpperCase()} - {`${user.name} ${user.lname.split(' ').splice(-1)}`}
-			</h1>
-			<div className={classes.ACComponent}>
-				<div style={{ display: 'flex', flexDirection: 'column' }}>
-					<textarea
-						style={{ height: '200px', padding: '2rem' }}
-						value={inputValue}
-						onChange={(e) => handleChange(e)}
-					/>
-					<div className={classes.selectedNGDRContainer}>
+			{user && (
+				<LoadingOverlay active={loadingOverlay} spinner text="A fazer magia...">
+					<h1>
+						{acc.toUpperCase()} - {`${user.name} ${user.lname.split(' ').splice(-1)}`}
+					</h1>
+					<div className={classes.ACComponent}>
 						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							<InputLabel>NG</InputLabel>
-							<NativeSelect
-								value={ngSelectValue}
-								ref={ngSelectRef}
-								onChange={handleNGSelectChange}
-								required
-							>
-								<option value=""> - </option>
-								{ngOpts}
-							</NativeSelect>
-						</div>
-						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							{drOpts && (
-								<React.Fragment>
-									<InputLabel>DR</InputLabel>
+							<textarea
+								style={{
+									height       : '200px',
+									padding      : '2rem',
+									border       : `1px solid ${colors.red}`,
+									borderRadius : '5px'
+								}}
+								value={inputValue}
+								onChange={(e) => handleChange(e)}
+							/>
+							<div className={classes.selectedNGDRContainer}>
+								<div style={{ display: 'flex', flexDirection: 'column' }}>
+									<InputLabel style={{ color: colors.darkblue, fontWeight: '900' }}>NG</InputLabel>
 									<NativeSelect
-										ref={drSelectRef}
-										// defaultValue={dr[0] && dr[0]._id}
-										value={drSelectValue}
-										onChange={handleDRSelectChange}
+										defaultValue={ng[0] && ng[0]._id}
+										value={ngSelectValue}
+										ref={ngSelectRef}
+										onChange={handleNGSelectChange}
 										required
+										variant="filled"
 									>
-										<option value=""> - </option>
-										{displayDROpts}
+										<option value="" disabled>
+											{' '}
+											-{' '}
+										</option>
+										{ngOpts}
 									</NativeSelect>
-								</React.Fragment>
+								</div>
+								<div style={{ display: 'flex', flexDirection: 'column' }}>
+									{drOpts && (
+										<React.Fragment>
+											<InputLabel style={{ color: colors.darkblue, fontWeight: '900' }}>
+												DR
+											</InputLabel>
+											<NativeSelect
+												ref={drSelectRef}
+												defaultValue={dr[0] && dr[0]._id}
+												value={drSelectValue}
+												onChange={handleDRSelectChange}
+												required
+												variant="filled"
+											>
+												<option value="" disabled>
+													{' '}
+													-{' '}
+												</option>
+												{displayDROpts}
+											</NativeSelect>
+										</React.Fragment>
+									)}
+								</div>
+								<div
+									style={{
+										display        : 'flex',
+										alignItems     : 'center',
+										justifyContent : 'space-between',
+										gridColumn     : '-1 / 1'
+									}}
+								>
+									{!addingTxt ? (
+										<button onClick={handleAddText}>Adicionar Texto</button>
+									) : (
+										<CircularProgress />
+									)}
+									<button onClick={handleReset}>Limpar</button>
+								</div>
+							</div>
+							<div
+								style={{
+									display      : 'grid',
+									gridTemplate : ' auto auto / 150px auto',
+									alignItems   : 'center'
+								}}
+							>
+								<h3 style={{ color: colors.darkblue }}>Submeter PDF</h3>
+								<label
+									htmlFor="selectImage"
+									style={{
+										display             : 'grid',
+										gridTemplateColumns : '50px auto',
+										alignItems          : 'center',
+										gridGap             : '0 1rem',
+										cursor              : 'pointer'
+									}}
+								>
+									<PublishIcon style={{ color: colors.red, fontSize: '3rem' }} />
+									{picUploadRef.current &&
+										picUploadRef.current.files[0] &&
+										`${picUploadRef.current.files[0].name} carregado.`}
+									<input onChange={handleFile} ref={picUploadRef} id="selectImage" type="file" />
+								</label>
+							</div>
+							{isFile && (
+								<div>
+									<button onClick={fileSelectHandler}>Obter Páginas</button>
+								</div>
 							)}
 						</div>
-						<div
-							style={{
-								display        : 'flex',
-								alignItems     : 'center',
-								justifyContent : 'space-between',
-								gridColumn     : '-1 / 1'
-							}}
-						>
-							<button onClick={handleAddText}>Adicionar Texto</button>
-							<button onClick={handleReset}>Limpar</button>
-						</div>
-					</div>
-					<div>
-						<input onChange={handleFile} ref={picUploadRef} id="selectImage" type="file" />
-					</div>
-					{isFile && (
 						<div>
-							<button onClick={fileSelectHandler}>Obter Páginas</button>
+							<ACCGrid
+								acc={acc}
+								grid={grid}
+								ng={ng}
+								dr={dr}
+								texts={texts}
+								fetchGrid={fetchGrid}
+								username={username}
+								setDr={setDr}
+								setLoadingOverlay={setLoadingOverlay}
+							/>
 						</div>
-					)}
-				</div>
-				<div>
-					<LoadingOverlay active={loadingOverlay} spinner text="A fazer magia...">
-						<ACCGrid
-							acc={acc}
-							grid={grid}
-							ng={ng}
-							dr={dr}
-							texts={texts}
-							fetchGrid={fetchGrid}
-							username={username}
-							setDr={setDr}
-							setLoadingOverlay={setLoadingOverlay}
-						/>
-					</LoadingOverlay>
-				</div>
-			</div>
+					</div>
+				</LoadingOverlay>
+			)}
 		</div>
 	);
 };

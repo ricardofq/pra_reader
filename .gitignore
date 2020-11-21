@@ -65,3 +65,4 @@ typings/
 /pra_readerr/node_modules
 /pra_readerr/src
 /pra_readerr/public
+/pra_readerr/.env

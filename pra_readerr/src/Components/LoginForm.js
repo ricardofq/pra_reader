@@ -13,8 +13,8 @@ const LoginForm = (props) => {
 	const classes = useStyles();
 	const history = useHistory();
 	const { handleLogin } = props;
-	const [ username, setUsername ] = useState('');
-	const [ password, setPassword ] = useState('');
+	const [ username, setUsername ] = useState(process.env.REACT_APP_USERNAME || '');
+	const [ password, setPassword ] = useState(process.env.REACT_APP_PASSWORD || '');
 	const handleInput = (e, input) => {
 		input(e.target.value);
 	};
@@ -29,7 +29,11 @@ const LoginForm = (props) => {
 			if (response.status === 200 && response.data.msg === 'Successfully Authenticated') {
 				let { user } = response.data;
 				handleLogin(user);
-				history.push(`/utilizador/${user.username}`);
+				if (user.isAdmin) {
+					history.push(`/utilizadores`);
+				} else {
+					history.push(`/utilizador/${user.username}`);
+				}
 			}
 		} catch (error) {
 			console.log(error);
