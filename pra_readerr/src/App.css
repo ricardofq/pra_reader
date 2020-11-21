@@ -1,8 +1,16 @@
-
+@font-face {
+	font-family: 'SukhumvitSet-Text';
+	src: local('SukhumvitSet-Text'), url(./fonts/SukhumvitSet-Text.ttf) format('truetype');
+  }
 
 #root {
 	background-color: #f1faee;
 	color: #1d3557;
+	
+}
+
+#root h1, h2, h3, h4, h5, h6, span, p, a, input, label, button, li {
+	font-family: 'SukhumvitSet-Text' !important;
 }
 body a {
 	text-decoration: none !important;
@@ -24,6 +32,10 @@ body input[type="text"], input[type="password"], input[type="email"], input[type
 	/* cursor: url('cursor.png'), auto; */
 	background-color: #f1faee;
 	color: #1d3557;
+}
+
+body a, button, svg {
+	cursor: pointer;
 }
 
 input[type="file"] {

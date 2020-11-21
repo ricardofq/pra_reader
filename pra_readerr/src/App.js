@@ -14,6 +14,7 @@ import UserProfile from './Components/UserProfile';
 import Menu from './Components/Menu';
 import AdminPanel from './Components/AdminPanel';
 import AddGroup from './Components/AddGroup';
+import Home from './Components/Home';
 
 import { apiUrl } from './utils/utils';
 
@@ -43,6 +44,7 @@ function App(){
 			<Menu user={user} />
 			<div className={classes.main}>
 				<Switch>
+					<Route exact path="/" component={() => <Home />} />
 					<Route exact path="/login" component={() => <LoginForm handleLogin={handleLogin} />} />
 					<Route
 						exact
