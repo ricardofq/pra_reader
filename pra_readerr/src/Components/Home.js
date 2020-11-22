@@ -7,7 +7,7 @@ const Home = () => {
 				style={{
 					with               : '100%',
 					minHeight          : 'calc(100vh - 140px)',
-					background         : 'url(/cover.png)',
+					background         : 'url(/cover.jpg)',
 					backgroundSize     : 'cover',
 					backgroundPosition : 'center center'
 				}}
