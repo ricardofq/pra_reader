@@ -123,7 +123,7 @@ function TabPanel(props){
 				<Box className={classes.BoxContainer} p={3}>
 					<div className={classes.Box}>
 						<Typography style={{ fontWeight: '900' }} variant="h6">{`DR${dr.number}`}</Typography>
-						<div style={{ width: editGrade ? '200px' : '150px' }} className={classes.BoxGradeContainer}>
+						<div style={{ width: editGrade ? '200px' : null }} className={classes.BoxGradeContainer}>
 							{!loadingGrade ? !editGrade ? (
 								<React.Fragment>
 									<Typography
@@ -202,7 +202,13 @@ export default function VerticalTabs(props){
 		if (el.dr.length && dr.length) {
 			grades = el.dr.map((drID) => parseInt(dr.find((dr) => dr._id === drID).grade));
 		}
-		return <Tab key={el._id} label={<NGLabel num={el.number} grades={grades} />} {...a11yProps(el.number - 1)} />;
+		return (
+			<Tab
+				key={el._id}
+				label={<NGLabel num={el.number} grades={grades} elID={el.id} />}
+				{...a11yProps(el.number - 1)}
+			/>
+		);
 	});
 
 	const displayDR = dr.map((el) => {
@@ -235,7 +241,7 @@ export default function VerticalTabs(props){
 			>
 				{displayNG}
 			</Tabs>
-			<div style={{ height: '536px', maxHeight: '700px', overflowY: 'scroll', width: '100%' }}>{displayDR}</div>
+			<div style={{ maxHeight: '552px', overflowY: 'scroll', width: '100%' }}>{displayDR}</div>
 		</div>
 	);
 }

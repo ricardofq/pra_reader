@@ -84,6 +84,7 @@ const RegisterForm = (props) => {
 									id="user_type"
 									onChange={(e) => handleInput(e, setuserType)}
 									displayEmpty
+									required
 								>
 									<MenuItem value={''}>Selecionar</MenuItem>
 									<MenuItem value="candidate">Candidato</MenuItem>

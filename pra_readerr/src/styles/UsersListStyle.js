@@ -12,11 +12,18 @@ export const useStyles = makeStyles((theme) => ({
 		}
 	},
 	UsersListRow       : {
-		display             : 'grid',
-		gridTemplateColumns : '200px 150px 50px 50px 50px',
-		padding             : '0',
-		'& li'              : {
+		display                        : 'grid',
+		gridTemplateColumns            : '160px 120px 50px 50px 50px',
+		padding                        : '0',
+		'& li'                         : {
 			padding : '.5rem'
+		},
+		[theme.breakpoints.down('xs')]: {
+			gridTemplateColumns : '120px 90px 37px 37px 37px',
+			'& li'              : {
+				fontSize : '.8rem',
+				padding  : '.25rem'
+			}
 		}
 	}
 }));

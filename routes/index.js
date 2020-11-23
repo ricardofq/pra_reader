@@ -209,6 +209,8 @@ router.post('/editgrade/:drID', async (req, res) => {
 		console.log(req.body);
 		const { drID } = req.params;
 		const dr = await DR.findOneAndUpdate({ _id: drID }, { $set: { grade: req.body.newGrade } });
+		// const drNG = await NG.findById(dr.ng);
+		// console.log(drNG);
 		res.send({ msg: 'Grade updated' });
 	} catch (error) {
 		console.log(error);

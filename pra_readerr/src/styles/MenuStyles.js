@@ -18,9 +18,12 @@ export const useStyles = makeStyles((theme) => ({
 		}
 	},
 	MenuLogo : {
-		backgroundColor : colors.white,
-		borderRadius    : '5px',
-		height          : '70px',
-		padding         : '1rem'
+		backgroundColor                : colors.white,
+		borderRadius                   : '5px',
+		height                         : '70px',
+		padding                        : '1rem',
+		[theme.breakpoints.down('xs')]: {
+			height : '52px'
+		}
 	}
 }));

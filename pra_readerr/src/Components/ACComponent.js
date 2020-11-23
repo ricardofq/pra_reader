@@ -177,7 +177,7 @@ const ACComponent = (props) => {
 						{acc.toUpperCase()} - {`${user.name} ${user.lname.split(' ').splice(-1)}`}
 					</h1>
 					<div className={classes.ACComponent}>
-						<div style={{ display: 'flex', flexDirection: 'column' }}>
+						<div className={classes.ACComponentInputContainer}>
 							<textarea
 								style={{
 									height       : '200px',
@@ -276,7 +276,7 @@ const ACComponent = (props) => {
 								</div>
 							)}
 						</div>
-						<div>
+						<div className={classes.ACComponentGridContainer}>
 							<ACCGrid
 								acc={acc}
 								grid={grid}

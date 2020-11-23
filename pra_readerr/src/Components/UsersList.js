@@ -34,9 +34,10 @@ const UsersList = (props) => {
 				<ListItem className={classes.UsersList}>
 					<List className={classes.UsersListRow}>
 						<ListItem>
-							<Link to={`/utilizador/${userEl.username}`}>{`${userEl.name} ${userEl.lname
-								.split(' ')
-								.splice(-1)}`}</Link>
+							<Link to={`/utilizador/${userEl.username}`}>{`${userEl.name.replace(
+								/ .*/,
+								''
+							)} ${userEl.lname.split(' ').splice(-1)}`}</Link>
 						</ListItem>
 						{/* <ListItem>
 						<Link to={`/utilizador/${userEl.username}`}>{userEl.username}</Link>

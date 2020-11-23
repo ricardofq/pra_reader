@@ -5,6 +5,7 @@ import { colors } from '../utils/utils';
 export const useStyles = makeStyles((theme) => ({
 	root                  : {
 		flexGrow                                  : 1,
+		// height                                    : '100%',
 		backgroundColor                           : theme.palette.background.paper,
 		display                                   : 'flex',
 		border                                    : `1px solid ${colors.red}`,
@@ -37,18 +38,25 @@ export const useStyles = makeStyles((theme) => ({
 			color : '#fff'
 		},
 		'& button'                                : {
-			height : '67px'
+			height : '69px'
 		},
 		'& .MuiCircularProgress-colorPrimary'     : {
 			color : colors.lightblue
 		}
 	},
 	tabs                  : {
-		borderRight : `1px solid ${theme.palette.divider}`
+		borderRight : `1px solid ${theme.palette.divider}`,
+		minWidth    : '120px',
+		'& button'  : {
+			width : '100%'
+		}
 	},
 	ACCGridTxtElContainer : {
-		display             : 'grid',
-		gridTemplateColumns : '40px auto'
+		display                        : 'grid',
+		gridTemplateColumns            : '40px auto',
+		[theme.breakpoints.down('xs')]: {
+			fontSize : '.9rem'
+		}
 	},
 	ACCGridTxtEl          : {
 		color      : colors.darkblue,
@@ -72,11 +80,14 @@ export const useStyles = makeStyles((theme) => ({
 	},
 	BoxContainer          : {
 		// border     : '1px solid #7d6fe4',
-		borderLeft : 'none',
-		paddingTop : '0',
-		fontWeight : '900',
-		padding    : '0 24px',
-		minHeight  : '134px'
+		borderLeft                     : 'none',
+		paddingTop                     : '0',
+		fontWeight                     : '900',
+		padding                        : '0 1.5rem',
+		minHeight                      : '134px',
+		[theme.breakpoints.down('xs')]: {
+			padding : '0 1rem'
+		}
 	},
 	Box                   : {
 		margin          : '0 -1.5rem 1rem',
@@ -84,24 +95,33 @@ export const useStyles = makeStyles((theme) => ({
 		padding         : '1rem',
 		color           : colors.white,
 		fontWeight      : '900',
-		height          : 'calc(67px - 1rem)',
+		height          : 'calc(69px - 1rem)',
 		// display         : 'grid',
 		// gridTemplate    : 'auto auto / 200px',
 		// gridGap         : '1.5rem'
 		display         : 'flex',
-		justifyContent  : 'space-between'
+		justifyContent  : 'space-between',
+		'& h6'          : {
+			[theme.breakpoints.down('xs')]: {
+				fontSize : '1rem'
+			}
+		}
 	},
 	BoxGradeContainer     : {
-		backgroundColor : '#fff',
+		backgroundColor                : '#fff',
 		// display             : 'grid',
 		// gridTemplateColumns : 'auto auto auto',
-		borderRadius    : '5px',
-		padding         : '0.5rem',
+		borderRadius                   : '5px',
+		padding                        : '0.5rem',
 		// alignItems          : 'center'
-		display         : 'flex',
-		justifyContent  : 'space-evenly',
-		alignItems      : 'center',
-		transition      : 'width 1s ease-in-out'
+		display                        : 'flex',
+		justifyContent                 : 'space-evenly',
+		alignItems                     : 'center',
+		transition                     : 'width 1s ease-in-out',
+		width                          : '150px',
+		[theme.breakpoints.down('sm')]: {
+			width : '120px'
+		}
 	}
 }));
 
