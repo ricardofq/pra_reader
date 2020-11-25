@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { List, ListItem } from '@material-ui/core';
 import { format, parseISO } from 'date-fns';
 
+import EditIcon from '@material-ui/icons/Edit';
+
 import { useStyles } from '../styles/UserProfileStyles';
 
 const UserProfile = (props) => {
@@ -55,6 +57,13 @@ const UserProfile = (props) => {
 							</ListItem>
 						</List>
 					)}
+					<List>
+						<ListItem>
+							<Link to={`/utilizador/${displayUser.username}/edit`}>
+								<EditIcon />
+							</Link>
+						</ListItem>
+					</List>
 				</React.Fragment>
 			)}
 		</div>

@@ -67,7 +67,7 @@ const UsersList = (props) => {
 			</React.Fragment>
 		));
 	return (
-		<div className={classes.UsersListContainer}>
+		<div style={{ borderBottom: 'none' }} className={classes.UsersListContainer}>
 			<div className={classes.UsersListFilter}>
 				<TextField
 					autoComplete="off"

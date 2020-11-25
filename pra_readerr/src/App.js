@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Switch, Route } from 'react-router-dom';
 
@@ -15,8 +15,9 @@ import Menu from './Components/Menu';
 import AdminPanel from './Components/AdminPanel';
 import AddGroup from './Components/AddGroup';
 import Home from './Components/Home';
+import Groups from './Components/Groups';
 
-import { apiUrl } from './utils/utils';
+import { apiUrl, isEmpty } from './utils/utils';
 
 import { useStyles } from './styles/AppStyles';
 import './App.css';
@@ -30,7 +31,32 @@ function App(){
 		setUser(user);
 		fetchAllUsers(user._id);
 		fetchAllGroups(user);
+		// localStorage.setItem('currentUser', JSON.stringify(user));
+		// console.log('cenas');
 	};
+	// useEffect(() => {
+	// 	const loggedInUser = localStorage.getItem('currentUser');
+	// 	if (loggedInUser) {
+	// 		const foundUser = JSON.parse(loggedInUser);
+	// 		setUser(foundUser);
+	// 		fetchAllUsers(foundUser._id);
+	// 		fetchAllGroups(foundUser);
+	// 	}
+	// }, []);
+	useEffect(() => {
+		try {
+			axios.get(`${apiUrl}/currentuser`, { withCredentials: true }).then((res) => {
+				let { currentUser } = res.data;
+				if (currentUser) {
+					setUser(currentUser);
+					fetchAllUsers(currentUser._id);
+					fetchAllGroups(currentUser);
+				}
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}, []);
 	const fetchAllUsers = async (userID) => {
 		const response = await axios.get(`${apiUrl}/allusers/${userID}`, { withCredentials: true });
 		setAllUsers(response.data.allUsers);
@@ -50,13 +76,31 @@ function App(){
 						exact
 						path="/registo"
 						component={() => (
-							<RegisterForm user={user} fetchAllUsers={fetchAllUsers} allGroups={allGroups} />
+							<RegisterForm
+								user={user}
+								fetchAllUsers={fetchAllUsers}
+								allGroups={allGroups}
+								url="register"
+							/>
 						)}
 					/>
 					<Route
 						exact
 						path="/utilizador/:username"
 						component={() => <UserProfile user={user} allUsers={allUsers} allGroups={allGroups} />}
+					/>
+					<Route
+						exact
+						path="/utilizador/:usernameParam/edit"
+						component={() => (
+							<RegisterForm
+								user={user}
+								url="edit"
+								allGroups={allGroups}
+								allUsers={allUsers}
+								fetchAllUsers={fetchAllUsers}
+							/>
+						)}
 					/>
 					<Route
 						exact
@@ -86,6 +130,7 @@ function App(){
 						path="/admin/addgroup"
 						component={() => <AddGroup user={user} fetchAllGroups={fetchAllGroups} />}
 					/>
+					<Route exact path="/grupo/:groupID" component={() => <Groups />} />
 				</Switch>
 			</div>
 		</div>

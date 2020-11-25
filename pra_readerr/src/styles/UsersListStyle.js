@@ -1,5 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 
+import { colors } from '../utils/utils';
+
 export const useStyles = makeStyles((theme) => ({
 	UsersList          : {
 		padding : '0'
@@ -7,6 +9,7 @@ export const useStyles = makeStyles((theme) => ({
 	UsersListContainer : {
 		padding                : '1rem',
 		'& input'              : { width: '100%' },
+		borderBottom           : `1px solid ${colors.darkblue}`,
 		'& .MuiTextField-root' : {
 			width : '100%'
 		}

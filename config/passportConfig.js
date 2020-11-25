@@ -25,6 +25,7 @@ module.exports = function(passport){
 		cb(null, user);
 	});
 	passport.deserializeUser((id, cb) => {
+		console.log('serealizeuser');
 		Users.findOne({ _id: id }, (err, user) => {
 			const userInformation = {
 				username : user.username

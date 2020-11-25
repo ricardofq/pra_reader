@@ -48,11 +48,15 @@ app.use(
 			sameSite : 'strict'
 		},
 		store             : new MemoryStore(),
-		maxAge            : Date.now() + 30 * 86400 * 1000
+		maxAge            : 3600000
 	})
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use((req, res, next) => {
+	req.currentUser = req.user;
+	next();
+});
 app.use('/api', indexRouter);
 // if (process.env.NODE_ENV === 'production') {
 // 	// Serve any static files

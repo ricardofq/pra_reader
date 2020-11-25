@@ -13,7 +13,7 @@ import axios from 'axios';
 import { apiUrl } from '../utils/utils';
 
 const RegisterForm = (props) => {
-	const { user, fetchAllUsers, allGroups, url } = props;
+	const { user, fetchAllUsers, allGroups } = props;
 	const { usernameParam } = useParams();
 	const history = useHistory();
 	const classes = useStyles();
@@ -27,9 +27,6 @@ const RegisterForm = (props) => {
 	const [ telephone, setTelephone ] = useState('');
 	const [ birthday, setBirthday ] = useState('');
 	const [ group, setGroup ] = useState('');
-
-	const [ fetchedUser, setFetchedUser ] = useState('');
-
 	const handleInput = (e, input) => {
 		e.preventDefault();
 		input(e.target.value);
@@ -37,93 +34,59 @@ const RegisterForm = (props) => {
 	const handleSubmit = async (e) => {
 		try {
 			e.preventDefault();
-			if (url === 'register') {
-				if (user.isAdmin) {
-					if (confirmPassword === password) {
-						let data = {
-							user_type   : userType,
-							name        : name,
-							lname       : lname,
-							username    : username,
-							password    : password,
-							birthday    : new Date(birthday),
-							email       : email,
-							telephone   : telephone,
-							isAdmin     : userType === 'admin',
-							isCandidate : userType === 'candidate',
-							group       : group
-						};
-						const response = await axios.post(`${apiUrl}/register`, data, {
-							withCredentials : true
-						});
-						if (response.status === 200 && response.data.msg === 'User registered') {
-							console.log('user registered');
-							fetchAllUsers(user._id);
-							history.push('/registo');
-						} else {
-							history.push('/registo');
-						}
+			if (user.isAdmin) {
+				if (confirmPassword === password) {
+					let data = {
+						user_type   : userType,
+						name        : name,
+						lname       : lname,
+						username    : username,
+						password    : password,
+						birthday    : new Date(birthday),
+						email       : email,
+						telephone   : telephone,
+						isAdmin     : userType === 'admin',
+						isCandidate : userType === 'candidate',
+						group       : group
+					};
+					const response = await axios.post(`${apiUrl}/register`, data, {
+						withCredentials : true
+					});
+					if (response.status === 200 && response.data.msg === 'User registered') {
+						console.log('user registered');
+						fetchAllUsers(user._id);
+						history.push('/registo');
 					} else {
-						console.log('password does not match');
-						// handleAppMessage('Password e Confirmar Password não coincidem!');
-						// history.push('/register');
+						history.push('/registo');
 					}
-				}
-			} else {
-				let data = {
-					user_type   : userType,
-					name        : name,
-					lname       : lname,
-					birthday    : new Date(birthday),
-					email       : email,
-					telephone   : telephone,
-					isAdmin     : userType === 'admin',
-					isCandidate : userType === 'candidate',
-					group       : group
-				};
-				const response = await axios.put(`${apiUrl}/edit/${fetchedUser._id}`, data, {
-					withCredentials : true
-				});
-				if (response.status === 200 && response.data.msg === 'User edited') {
-					console.log('user edited');
-					fetchAllUsers(user._id);
-					history.push(`/utilizador/${fetchedUser.username}`);
 				} else {
-					history.push('/');
+					console.log('password does not match');
+					// handleAppMessage('Password e Confirmar Password não coincidem!');
+					// history.push('/register');
 				}
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
+	const [ fetchedUserID, setFetchedUserID ] = useState('');
 	useEffect(() => {
 		let didCancel = false;
-		if (usernameParam && url === 'edit') {
-			axios.get(`${apiUrl}/getuserbyusername/${usernameParam}`, { withCredentials: true }).then((res) => {
-				console.log(res);
-				const { fetchedUser } = res.data;
-				setFetchedUser(fetchedUser);
-				setName(fetchedUser.name || '');
-				setlName(fetchedUser.lname || '');
-				setEmail(fetchedUser.email || '');
-				setTelephone(fetchedUser.telephone || '');
-				setBirthday(fetchedUser.birthday.split('T')[0] || '');
-				setuserType(fetchedUser.isAdmin ? 'admin' : 'candidate' || '');
-				setGroup(fetchedUser.group || '');
-			});
-		}
+		axios.get(`${apiUrl}/getuserbyusername/${usernameParam}`, { withCredentials: true }).then((res) => {
+			console.log(res);
+			const { fetchedUser } = res.data;
+			setFetchedUserID(fetchedUser._id);
+		});
 		return () => {
 			didCancel = true;
 		};
 	}, []);
-
 	return (
 		<div className={classes.RegisterFormContainer}>
 			{user.isAdmin && (
 				<div className={classes.RegisterForm}>
 					<form className={classes.RegisterFormForm} onSubmit={(e) => handleSubmit(e)}>
-						<h1>{url !== 'edit' ? 'Novo' : 'Editar'} Utilizador</h1>
+						<h1>Novo Utilizador</h1>
 						<div className={classes.RegisterFormFieldContainer}>
 							<div className={classes.RegisterFormField} style={{ gridColumn: '-1 / 1' }}>
 								<Select
@@ -182,19 +145,17 @@ const RegisterForm = (props) => {
 									value={lname}
 								/>
 							</div>
-							{url !== 'edit' && (
-								<div className={classes.RegisterFormField}>
-									<TextField
-										autoComplete="off"
-										onChange={(e) => handleInput(e, setUsername)}
-										id="username"
-										variant="filled"
-										label="Nome de Utilizador"
-										type="text"
-										value={username}
-									/>
-								</div>
-							)}
+							<div className={classes.RegisterFormField}>
+								<TextField
+									autoComplete="off"
+									onChange={(e) => handleInput(e, setUsername)}
+									id="username"
+									variant="filled"
+									label="Nome de Utilizador"
+									type="text"
+									value={username}
+								/>
+							</div>
 							<div className={classes.RegisterFormField}>
 								<TextField
 									autoComplete="off"
@@ -207,34 +168,32 @@ const RegisterForm = (props) => {
 									value={email}
 								/>
 							</div>
-							{url !== 'edit' && (
-								<React.Fragment>
-									<div className={classes.RegisterFormField}>
-										<TextField
-											autoComplete="off"
-											onChange={(e) => handleInput(e, setPassword)}
-											id="password"
-											name="password"
-											variant="filled"
-											label="Password"
-											type="password"
-											value={password}
-										/>
-									</div>
-									<div className={classes.RegisterFormField}>
-										<TextField
-											autoComplete="off"
-											onChange={(e) => handleInput(e, setConfirmPassword)}
-											id="confirm_password"
-											name="confirm_password"
-											variant="filled"
-											label="Confirmar Password"
-											type="password"
-											value={confirmPassword}
-										/>
-									</div>
-								</React.Fragment>
-							)}
+							<React.Fragment>
+								<div className={classes.RegisterFormField}>
+									<TextField
+										autoComplete="off"
+										onChange={(e) => handleInput(e, setPassword)}
+										id="password"
+										name="password"
+										variant="filled"
+										label="Password"
+										type="password"
+										value={password}
+									/>
+								</div>
+								<div className={classes.RegisterFormField}>
+									<TextField
+										autoComplete="off"
+										onChange={(e) => handleInput(e, setConfirmPassword)}
+										id="confirm_password"
+										name="confirm_password"
+										variant="filled"
+										label="Confirmar Password"
+										type="password"
+										value={confirmPassword}
+									/>
+								</div>
+							</React.Fragment>
 
 							<div className={classes.RegisterFormField}>
 								<TextField
@@ -261,7 +220,7 @@ const RegisterForm = (props) => {
 							</div>
 							<div className={classes.RegisterFormField}>
 								<button className={classes.RegisterBtn} type="submit">
-									{url !== 'edit' ? 'Criar' : 'Editar'}
+									Criar Conta
 								</button>
 							</div>
 						</div>

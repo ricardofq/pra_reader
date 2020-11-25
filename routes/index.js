@@ -84,6 +84,14 @@ const populateText = async () => {
 // 		console.error(err);
 // 	});
 
+const isAuthenticated = function(req, res, next){
+	if (req.user) return next();
+	else
+		return res.json({
+			error : 'User not authenticated'
+		});
+};
+
 router.post('/login', (req, res, next) => {
 	passport.authenticate('local', { session: true }, (err, user, info) => {
 		if (err) throw err;
@@ -92,7 +100,7 @@ router.post('/login', (req, res, next) => {
 			req.logIn(user, (err) => {
 				if (err) throw err;
 				if (user) {
-					return res.send({ msg: 'Successfully Authenticated', user: user });
+					return res.json({ msg: 'Successfully Authenticated', user: user });
 				}
 				res.send({ msg: 'User not found', user: null });
 			});
@@ -100,7 +108,12 @@ router.post('/login', (req, res, next) => {
 	})(req, res, next);
 });
 
+router.get('/currentuser', isAuthenticated, (req, res) => {
+	return res.send({ currentUser: req.user, msg: 'User exists' });
+});
+
 router.get('/allusers/:userID', async (req, res) => {
+	console.log(req.currentUser);
 	try {
 		const { userID } = req.params;
 		const user = await Users.findById(userID);
@@ -298,13 +311,18 @@ router.post('/addgroup', async (req, res) => {
 	}
 });
 
-router.get('/allgroups/', async (req, res) => {
-	const allGroups = await Groups.find({});
-	if (req.user.isAdmin) {
-		return res.send({ msg: 'All Groups', allGroups: allGroups });
-	} else {
-		const userGroup = allGroups.filter((el) => el.candidates.find(user._id));
-		return res.send({ msg: 'All Groups', allGroups: userGroup });
+router.get('/allgroups/', isAuthenticated, async (req, res) => {
+	try {
+		const allGroups = await Groups.find({});
+		if (req.user.isAdmin) {
+			return res.send({ msg: 'All Groups', allGroups: allGroups });
+		} else {
+			const userGroup = allGroups.filter((el) => el.candidates.find(user._id));
+			return res.send({ msg: 'All Groups', allGroups: userGroup });
+		}
+	} catch (error) {
+		console.log(error);
+		res.send({ msg: 'something went wrong' });
 	}
 });
 
@@ -318,6 +336,45 @@ router.post('/deletetxt/:txtID', async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		res.send({ msg: 'Something went wrong', error: error });
+	}
+});
+
+router.get('/getuserbyusername/:username', isAuthenticated, async (req, res) => {
+	try {
+		const { username } = req.params;
+		const user = await Users.findOne({ username: username });
+		if (user) return res.send({ msg: 'user by username', fetchedUser: user });
+		return res.send({ msg: 'user not found' });
+	} catch (error) {
+		console.error(error);
+		res.send({ msg: 'something went wrong' });
+	}
+});
+
+router.put('/edit/:userID', async (req, res) => {
+	let userBody = req.body;
+	const user = await Users.findById(req.params.userID);
+	if (!userBody.group && userBody.isAdmin) {
+		delete userBody.group;
+		await Users.findByIdAndUpdate(req.params.userID, userBody);
+		return res.send({ msg: 'User edited', userBody });
+	} else if (user.group !== userBody.group) {
+		await Groups.findOneAndUpdate({ _id: user.group }, { $pull: { candidates: user._id } });
+		return res.send({ msg: 'User edited', userBody });
+	} else {
+		await Users.findByIdAndUpdate(req.params.userID, userBody);
+		return res.send({ msg: 'User edited', userBody });
+	}
+});
+
+router.get('/getgroup/:groupID', async (req, res) => {
+	try {
+		const group = await Groups.findById(req.params.groupID);
+		console.log(group);
+		res.send({ fetchedGroup: group });
+	} catch (error) {
+		console.log(error);
+		res.send(error);
 	}
 });
 
