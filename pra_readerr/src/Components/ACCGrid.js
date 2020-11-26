@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -9,6 +9,7 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import Box from '@material-ui/core/Box';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 import NGLabel from './NGLabel';
 import { useStyles } from '../styles/ACCGridStyles';
@@ -29,7 +30,6 @@ function TabPanel(props){
 		let fullTxt = false;
 		const handleClick = (e) => {
 			e.preventDefault();
-			console.log(fullTxt);
 			console.log(txtRef.current);
 			if (!fullTxt) {
 				txtRef.current.childNodes[0].textContent = `${txt.text.fullText}`;
@@ -111,6 +111,14 @@ function TabPanel(props){
 		setDrGrade(e.target.value);
 	};
 	const [ loadingGrade, setLoadingGrade ] = useState(false);
+	const handleCopy = (e, DRRf) => {
+		// console.log(DRRef.current.childNodes);
+		let childNodeArray = [ ...DRRef.current.childNodes ];
+		let txtArray = childNodeArray.map((el) => el.textContent);
+		let txtStr = txtArray.join('\n');
+		navigator.clipboard.writeText(txtStr);
+	};
+	const DRRef = useRef();
 	return (
 		<div
 			role="tabpanel"
@@ -122,7 +130,10 @@ function TabPanel(props){
 			{value === index && (
 				<Box className={classes.BoxContainer} p={3}>
 					<div className={classes.Box}>
-						<Typography style={{ fontWeight: '900' }} variant="h6">{`DR${dr.number}`}</Typography>
+						<div style={{ display: 'flex', alignItems: 'center' }}>
+							<Typography style={{ fontWeight: '900' }} variant="h6">{`DR${dr.number}`}</Typography>
+							<FileCopyIcon style={{ marginLeft: '.25rem' }} onClick={(e) => handleCopy(e, DRRef)} />
+						</div>
 						<div style={{ width: editGrade ? '200px' : null }} className={classes.BoxGradeContainer}>
 							{!loadingGrade ? !editGrade ? (
 								<React.Fragment>
@@ -167,7 +178,7 @@ function TabPanel(props){
 							)}
 						</div>
 					</div>
-					<div>{displayDRtext}</div>
+					<div ref={DRRef}>{displayDRtext}</div>
 				</Box>
 			)}
 		</div>
