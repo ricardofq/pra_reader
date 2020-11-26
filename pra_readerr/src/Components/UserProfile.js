@@ -45,7 +45,7 @@ const UserProfile = (props) => {
 						</ListItem>
 					</List>
 					{displayUser.isCandidate && (
-						<List className={classes.UserProfile}>
+						<List className={classes.UserProfileLinks}>
 							<ListItem>
 								<Link to={`/utilizador/${displayUser.username}/cp`}>CP</Link>
 							</ListItem>
@@ -58,9 +58,12 @@ const UserProfile = (props) => {
 						</List>
 					)}
 					<List>
-						<ListItem>
+						<ListItem className={classes.UserProfileActions}>
 							<Link to={`/utilizador/${displayUser.username}/edit`}>
-								<EditIcon />
+								<span>Editar Utilizador</span>
+								<span>
+									<EditIcon />
+								</span>
 							</Link>
 						</ListItem>
 					</List>
