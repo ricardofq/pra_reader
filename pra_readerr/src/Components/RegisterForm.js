@@ -97,26 +97,30 @@ const RegisterForm = (props) => {
 		}
 	};
 
-	useEffect(() => {
-		let didCancel = false;
-		if (usernameParam && url === 'edit') {
-			axios.get(`${apiUrl}/getuserbyusername/${usernameParam}`, { withCredentials: true }).then((res) => {
-				console.log(res);
-				const { fetchedUser } = res.data;
-				setFetchedUser(fetchedUser);
-				setName(fetchedUser.name || '');
-				setlName(fetchedUser.lname || '');
-				setEmail(fetchedUser.email || '');
-				setTelephone(fetchedUser.telephone || '');
-				setBirthday(fetchedUser.birthday.split('T')[0] || '');
-				setuserType(fetchedUser.isAdmin ? 'admin' : 'candidate' || '');
-				setGroup(fetchedUser.group || '');
-			});
-		}
-		return () => {
-			didCancel = true;
-		};
-	}, []);
+	useEffect(
+		() => {
+			let didCancel = false;
+			if (usernameParam && url === 'edit') {
+				axios.get(`${apiUrl}/getuserbyusername/${usernameParam}`, { withCredentials: true }).then((res) => {
+					const { fetchedUser } = res.data;
+					if (!didCancel) {
+						setFetchedUser(fetchedUser);
+						setName(fetchedUser.name || '');
+						setlName(fetchedUser.lname || '');
+						setEmail(fetchedUser.email || '');
+						setTelephone(fetchedUser.telephone || '');
+						setBirthday(fetchedUser.birthday.split('T')[0] || '');
+						setuserType(fetchedUser.isAdmin ? 'admin' : 'candidate' || '');
+						setGroup(fetchedUser.group || '');
+					}
+				});
+			}
+			return () => {
+				didCancel = true;
+			};
+		},
+		[ url, usernameParam ]
+	);
 
 	return (
 		<div className={classes.RegisterFormContainer}>

@@ -18,7 +18,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ACComponent = (props) => {
-	const { acc, allUsers, defaultProps } = props;
+	const { acc, allUsers } = props;
 	const classes = useStyles();
 	const { username } = useParams();
 	const user = allUsers.find((el) => el.username === username);

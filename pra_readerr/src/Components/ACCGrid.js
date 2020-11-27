@@ -14,7 +14,7 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import NGLabel from './NGLabel';
 import { useStyles } from '../styles/ACCGridStyles';
 
-import { apiUrl, gradeColors, colors, isValidated } from '../utils/utils';
+import { apiUrl, gradeColors, colors } from '../utils/utils';
 
 import axios from 'axios';
 

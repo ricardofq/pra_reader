@@ -17,7 +17,7 @@ import AddGroup from './Components/AddGroup';
 import Home from './Components/Home';
 import Groups from './Components/Groups';
 
-import { apiUrl, isEmpty } from './utils/utils';
+import { apiUrl } from './utils/utils';
 
 import { useStyles } from './styles/AppStyles';
 import './App.css';
