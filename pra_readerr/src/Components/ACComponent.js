@@ -156,14 +156,13 @@ const ACComponent = (props) => {
 	useEffect(
 		() => {
 			console.log(ngSelectRef.current.children[0].value);
-			console.log(ngOpts);
+			// console.log(ngOpts);
 			if (ngSelectRef.current) {
 				let selectedNG = ngSelectRef.current.children[0].value;
 				let drOpts = dr.filter((el) => el.ng === selectedNG);
-				console.log(drOpts[0]);
+				// console.log(drOpts[0]);
 				setDROpts(drOpts);
 				setDRSelectValue('');
-				// setDRSelectValue(drOpts[0]);
 			}
 		},
 		[ dr, ngSelectValue ]

@@ -74,7 +74,7 @@ function TabPanel(props){
 				<span onClick={(e) => handleClick(e)} className={classes.ACCGridTxtEl} ref={txtRef}>
 					<span>{txt && `${txt.text.first} (...) ${txt.text.last}`}</span>
 					<span className={txt && txt.pagI && txt.pagF ? classes.withPage : classes.noPage}>
-						{txt && ` - Pág. ${txt.pagI} a Pág. ${txt.pagF}`}
+						{txt && ` - Pág. ${txt.pagI}`} {txt && txt.pagF !== txt.pagI ? `a Pág. ${txt.pagF}` : null}
 					</span>
 				</span>
 			</Typography>
