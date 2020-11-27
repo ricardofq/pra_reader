@@ -121,7 +121,7 @@ const ACComponent = (props) => {
 		e.preventDefault();
 		// e.stopPropagation();
 		setNGSelectValue(e.target.value);
-		setDRSelectValue(drSelectRef.current.children[0].value);
+		// setDRSelectValue(drSelectRef.current.children[0].value);
 	};
 	const handleDRSelectChange = (e) => {
 		e.preventDefault();
