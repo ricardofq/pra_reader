@@ -119,7 +119,6 @@ const ACComponent = (props) => {
 	});
 	const handleNGSelectChange = (e) => {
 		e.preventDefault();
-		// e.stopPropagation();
 		setNGSelectValue(e.target.value);
 		// setDRSelectValue(drSelectRef.current.children[0].value);
 	};
@@ -156,10 +155,15 @@ const ACComponent = (props) => {
 
 	useEffect(
 		() => {
+			console.log(ngSelectRef.current.children[0].value);
+			console.log(ngOpts);
 			if (ngSelectRef.current) {
 				let selectedNG = ngSelectRef.current.children[0].value;
 				let drOpts = dr.filter((el) => el.ng === selectedNG);
+				console.log(drOpts[0]);
 				setDROpts(drOpts);
+				setDRSelectValue('');
+				// setDRSelectValue(drOpts[0]);
 			}
 		},
 		[ dr, ngSelectValue ]
@@ -192,7 +196,7 @@ const ACComponent = (props) => {
 								<div style={{ display: 'flex', flexDirection: 'column' }}>
 									<InputLabel style={{ color: colors.darkblue, fontWeight: '900' }}>NG</InputLabel>
 									<NativeSelect
-										defaultValue={ng[0] && ng[0]._id}
+										// defaultValue={ng[0] && ng[0]._id}
 										value={ngSelectValue}
 										ref={ngSelectRef}
 										onChange={handleNGSelectChange}
@@ -214,7 +218,7 @@ const ACComponent = (props) => {
 											</InputLabel>
 											<NativeSelect
 												ref={drSelectRef}
-												defaultValue={dr[0] && dr[0]._id}
+												// defaultValue={dr[0] && dr[0]._id}
 												value={drSelectValue}
 												onChange={handleDRSelectChange}
 												required
