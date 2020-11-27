@@ -264,11 +264,13 @@ const ACComponent = (props) => {
 									}}
 								>
 									<PublishIcon style={{ color: colors.red, fontSize: '3rem' }} />
-									{picUploadRef.current &&
-										picUploadRef.current.files[0] &&
-										`${picUploadRef.current.files[0].name} carregado.`}
 									<input onChange={handleFile} ref={picUploadRef} id="selectImage" type="file" />
 								</label>
+								{picUploadRef.current &&
+								picUploadRef.current.files[0] && (
+									<p style={{ gridColumn: '-1 / 1' }}>{`${picUploadRef.current.files[0]
+										.name} carregado.`}</p>
+								)}
 							</div>
 							{isFile && (
 								<div>

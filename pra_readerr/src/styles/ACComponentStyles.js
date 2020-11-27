@@ -12,9 +12,9 @@ export const useStyles = makeStyles((theme) => ({
 		padding                        : '2rem',
 		display                        : 'grid',
 		gridGap                        : '2rem',
-		gridTemplate                   : '552px / 400px auto',
+		gridTemplate                   : 'auto / 400px auto',
 		[theme.breakpoints.down(1024)]: {
-			gridTemplateColumns : 'auto'
+			gridTemplate : 'auto / auto'
 		}
 		// '& .MuiNativeSelect-select.MuiNativeSelect-select' : {
 		// 	width    : '100px',
