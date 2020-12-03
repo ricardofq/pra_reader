@@ -26,16 +26,16 @@ function TabPanel(props){
 		let txt = texts.find((txt) => {
 			return txt._id === el;
 		});
-		if (txtRef.current) txtRef.current.childNodes[0].textContent = `${txt.text.fullText}`;
+		if (txtRef.current) txtRef.current.childNodes[0].textContent = `"${txt.text.fullText}"`;
 		let fullTxt = false;
 		const handleClick = (e) => {
 			e.preventDefault();
 			console.log(txtRef.current);
 			if (!fullTxt) {
-				txtRef.current.childNodes[0].textContent = `${txt.text.fullText}`;
+				txtRef.current.childNodes[0].textContent = `"${txt.text.fullText}"`;
 				fullTxt = !fullTxt;
 			} else {
-				txtRef.current.childNodes[0].textContent = `${txt.text.first} (...) ${txt.text.last}`;
+				txtRef.current.childNodes[0].textContent = `"${txt.text.first} (...) ${txt.text.last}"`;
 				fullTxt = !fullTxt;
 			}
 		};
@@ -72,7 +72,7 @@ function TabPanel(props){
 					/>
 				</span>
 				<span onClick={(e) => handleClick(e)} className={classes.ACCGridTxtEl} ref={txtRef}>
-					<span>{txt && `${txt.text.first} (...) ${txt.text.last}`}</span>
+					<span>"{txt && `${txt.text.first} (...) ${txt.text.last}`}"</span>
 					<span className={txt && txt.pagI && txt.pagF ? classes.withPage : classes.noPage}>
 						{txt && ` - Pág. ${txt.pagI}`} {txt && txt.pagF !== txt.pagI ? `a Pág. ${txt.pagF}` : null}
 					</span>
