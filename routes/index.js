@@ -206,8 +206,8 @@ router.post('/postdrtext/:drID', async (req, res) => {
 	try {
 		const { drID } = req.params;
 		const { inputValue } = req.body;
-		const first = inputValue.replace(/^(.{20}[^\s]*).*/, '$1');
-		const last = inputValue.substring(inputValue.length - 40).trim().split(' ').slice(1).join(' ');
+		const first = inputValue.replace(/^(.{60}[^\s]*).*/, '$1');
+		const last = inputValue.substring(inputValue.length - 60).trim().split(' ').slice(1).join(' ');
 		const text = await Text.create({ dr: drID, text: { fullText: inputValue, first: first, last: last } });
 		const dr = await DR.findOneAndUpdate({ _id: drID }, { $push: { texts: text._id } }, { new: true });
 		res.send({ msg: 'Text added successfuly', dr: dr, text: text });
@@ -250,7 +250,6 @@ router.post('/postfile', upload.single('file'), async (req, res) => {
 						let str = text.substring(text.lastIndexOf(`- ${i} -`), text.lastIndexOf(`- ${i + 1} -`));
 						pdfArr.push({ page: i, text: str.replace(/(\r\n|\n|\r)/gm, '') });
 					}
-					console.log(pdfArr[35]);
 					for (let i = 0; i < userGrid.NG.length; i++) {
 						// let element = userGrid.NG[i];
 						let ngEl = await NG.findOne({ _id: userGrid.NG[i] });
